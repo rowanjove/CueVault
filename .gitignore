@@ -27,3 +27,6 @@ rebuild-library.py
 Thumbs.db
 .vscode/
 .idea/
+
+# Release packaging directory
+release-dist/
