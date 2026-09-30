@@ -1,0 +1,1168 @@
+{
+  "categories": [
+    {
+      "id": "all",
+      "name": "全部",
+      "system": true
+    },
+    {
+      "id": "writing",
+      "name": "写作编辑",
+      "system": false
+    },
+    {
+      "id": "translation",
+      "name": "翻译表达",
+      "system": false
+    },
+    {
+      "id": "reading",
+      "name": "阅读提炼",
+      "system": false
+    },
+    {
+      "id": "learning",
+      "name": "学习训练",
+      "system": false
+    },
+    {
+      "id": "research",
+      "name": "信息研究",
+      "system": false
+    },
+    {
+      "id": "office",
+      "name": "办公文档",
+      "system": false
+    },
+    {
+      "id": "communication",
+      "name": "沟通协商",
+      "system": false
+    },
+    {
+      "id": "planning",
+      "name": "任务规划",
+      "system": false
+    },
+    {
+      "id": "decisions",
+      "name": "决策比较",
+      "system": false
+    },
+    {
+      "id": "product",
+      "name": "产品设计",
+      "system": false
+    },
+    {
+      "id": "coding",
+      "name": "编程实现",
+      "system": false
+    },
+    {
+      "id": "data",
+      "name": "数据处理",
+      "system": false
+    },
+    {
+      "id": "creative",
+      "name": "创意构思",
+      "system": false
+    }
+  ],
+  "prompts": [
+    {
+      "id": "59fbd7c8-750f-5281-8adb-91f4433bb752",
+      "title": "从要点写成文章",
+      "categoryId": "writing",
+      "tags": [
+        "文章",
+        "结构",
+        "成稿"
+      ],
+      "variants": [
+        {
+          "id": "59fbd7c8-750f-5281-8adb-91f4433bb752-default",
+          "name": "默认",
+          "content": "根据以下要点写一篇完整文章，面向指定读者和用途。先确定主线，再组织段落；使用具体、自然的语言，不虚构事实、数据或引语。缺少关键依据时明确标注，控制在目标篇幅内。\n读者与用途：[填写]\n篇幅：[填写]\n要点：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428980,
+      "useCount": 0
+    },
+    {
+      "id": "42ae5593-9d44-5174-a5f3-62c1928304ee",
+      "title": "润色现有文字",
+      "categoryId": "writing",
+      "tags": [
+        "润色",
+        "语气",
+        "可读性"
+      ],
+      "variants": [
+        {
+          "id": "42ae5593-9d44-5174-a5f3-62c1928304ee-default",
+          "name": "默认",
+          "content": "润色以下文字，改善语序、衔接和可读性，保持事实、立场及必要术语不变。删除套话与重复，避免夸大和机械排比；按指定语气输出可直接替换的正文，不附逐句解释。\n语气与用途：[填写]\n原文：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428979,
+      "useCount": 0
+    },
+    {
+      "id": "2b5dbf9e-4c1f-53d8-b70a-17f0d5df1894",
+      "title": "压缩到指定字数",
+      "categoryId": "writing",
+      "tags": [
+        "删减",
+        "篇幅",
+        "重点"
+      ],
+      "variants": [
+        {
+          "id": "2b5dbf9e-4c1f-53d8-b70a-17f0d5df1894-default",
+          "name": "默认",
+          "content": "将以下文字压缩到指定字数内，保留核心观点、关键证据、限制条件和结论。优先删掉重复与次要细节，不改变原意，不加入新信息。只输出压缩后的文本。\n字数上限：[填写]\n原文：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428978,
+      "useCount": 0
+    },
+    {
+      "id": "492f6cab-afbf-57f5-a840-1f54192308ff",
+      "title": "检查事实与表达",
+      "categoryId": "writing",
+      "tags": [
+        "校对",
+        "一致性",
+        "歧义"
+      ],
+      "variants": [
+        {
+          "id": "492f6cab-afbf-57f5-a840-1f54192308ff-default",
+          "name": "默认",
+          "content": "检查以下稿件的错别字、语病、前后矛盾、数字及名称一致性。分别列出确定错误和需要核实的事实，给出最小修改；无法从材料确认的内容不要判错。最后提供修订稿，保留原有风格。\n稿件：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428977,
+      "useCount": 0
+    },
+    {
+      "id": "ed9c77bb-be37-5137-8359-6e103f8075e4",
+      "title": "忠实翻译文本",
+      "categoryId": "translation",
+      "tags": [
+        "翻译",
+        "术语",
+        "保真"
+      ],
+      "variants": [
+        {
+          "id": "ed9c77bb-be37-5137-8359-6e103f8075e4-default",
+          "name": "默认",
+          "content": "将以下文本译为目标语言，准确保留信息、语气、数字及格式。专有名词与术语保持一致，不添加解释或省略限制条件；有歧义时在译文后简短注明。\n目标语言及地区：[填写]\n文本：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428970,
+      "useCount": 0
+    },
+    {
+      "id": "a8aaf919-da0a-5328-a01b-00def9c98f1a",
+      "title": "本地化界面文案",
+      "categoryId": "translation",
+      "tags": [
+        "本地化",
+        "界面",
+        "长度"
+      ],
+      "variants": [
+        {
+          "id": "a8aaf919-da0a-5328-a01b-00def9c98f1a-default",
+          "name": "默认",
+          "content": "把以下界面文案本地化为目标语言，兼顾自然表达、操作意图和长度限制。保留变量、占位符、快捷键及标记，不逐字硬译。按原键名输出对照表，有长度冲突时给出短版。\n语言与长度限制：[填写]\n文案：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428969,
+      "useCount": 0
+    },
+    {
+      "id": "c5071be3-fba8-59f1-bcac-f60fc82c42ab",
+      "title": "核对双语译文",
+      "categoryId": "translation",
+      "tags": [
+        "审译",
+        "漏译",
+        "对照"
+      ],
+      "variants": [
+        {
+          "id": "c5071be3-fba8-59f1-bcac-f60fc82c42ab-default",
+          "name": "默认",
+          "content": "对照原文检查译文的错译、漏译、语气偏差及术语不一致。只列有依据的问题，按原文片段、当前译文、建议修订、原因输出；最后给出完整修订译文。\n原文：[粘贴]\n译文：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428968,
+      "useCount": 0
+    },
+    {
+      "id": "78b1f895-b92c-5435-b10e-3a6fe33e0384",
+      "title": "准备外语口头表达",
+      "categoryId": "translation",
+      "tags": [
+        "口语",
+        "情境",
+        "对话"
+      ],
+      "variants": [
+        {
+          "id": "78b1f895-b92c-5435-b10e-3a6fe33e0384-default",
+          "name": "默认",
+          "content": "为以下真实场景准备自然、简短的外语表达。给出开场、核心诉求、常见追问和结束语，并附中文意思；区分礼貌正式与日常说法，不使用生硬书面语。\n语言、场景与诉求：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428967,
+      "useCount": 0
+    },
+    {
+      "id": "c69fe213-e4e9-55e8-a950-3d479306b82d",
+      "title": "提炼长文重点",
+      "categoryId": "reading",
+      "tags": [
+        "摘要",
+        "观点",
+        "证据"
+      ],
+      "variants": [
+        {
+          "id": "c69fe213-e4e9-55e8-a950-3d479306b82d-default",
+          "name": "默认",
+          "content": "根据以下原文提炼核心问题、主要观点、支撑证据与结论，保留影响理解的限制条件。每项标出对应段落或原文位置，区分作者观点和已证实事实；不引入外部知识。\n原文：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428960,
+      "useCount": 0
+    },
+    {
+      "id": "e3a23664-6c44-5784-a3e2-6e97b82f189d",
+      "title": "整理会议纪要",
+      "categoryId": "reading",
+      "tags": [
+        "会议",
+        "行动项",
+        "责任"
+      ],
+      "variants": [
+        {
+          "id": "e3a23664-6c44-5784-a3e2-6e97b82f189d-default",
+          "name": "默认",
+          "content": "将以下会议记录整理成议题、已达成决定、待确认事项和行动清单。行动项写明负责人、期限和依赖；记录中未指定的标为待确认，不自行分派。删掉重复讨论，保留分歧与重要理由。\n会议记录：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428959,
+      "useCount": 0
+    },
+    {
+      "id": "5d615582-4607-512b-9944-54cb18c69c96",
+      "title": "跨材料归纳观点",
+      "categoryId": "reading",
+      "tags": [
+        "归纳",
+        "分歧",
+        "出处"
+      ],
+      "variants": [
+        {
+          "id": "5d615582-4607-512b-9944-54cb18c69c96-default",
+          "name": "默认",
+          "content": "归纳以下多份材料的共同结论、分歧和各自证据，按主题组织，并标明材料名称或编号。不要把重复转述当成独立证据；对口径、时间或范围不同的内容分别说明。\n材料：[按编号粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428958,
+      "useCount": 0
+    },
+    {
+      "id": "9933d8a3-f123-5dbc-a0b3-b6445dc9cdf9",
+      "title": "提取规则和义务",
+      "categoryId": "reading",
+      "tags": [
+        "规则",
+        "条件",
+        "期限"
+      ],
+      "variants": [
+        {
+          "id": "9933d8a3-f123-5dbc-a0b3-b6445dc9cdf9-default",
+          "name": "默认",
+          "content": "从以下规则或协议中提取适用对象、前置条件、必须做的事、禁止事项、期限和例外，附条款位置。只依据原文，不补充法律结论；模糊或相互冲突的条款列为待确认。\n文本：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428957,
+      "useCount": 0
+    },
+    {
+      "id": "e6a22c10-1e66-55e9-af5c-e18c1a3e9dba",
+      "title": "解释陌生概念",
+      "categoryId": "learning",
+      "tags": [
+        "概念",
+        "类比",
+        "理解"
+      ],
+      "variants": [
+        {
+          "id": "e6a22c10-1e66-55e9-af5c-e18c1a3e9dba-default",
+          "name": "默认",
+          "content": "面向我的现有水平解释以下概念：先给准确的简短定义，再用一个贴近日常的例子说明，指出类比的局限和常见误解，最后给两道检查理解的小题及答案。避免术语堆砌。\n概念与我的水平：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428950,
+      "useCount": 0
+    },
+    {
+      "id": "38052e7b-91e7-51c4-940a-c44bd35a6f25",
+      "title": "制定学习路径",
+      "categoryId": "learning",
+      "tags": [
+        "学习计划",
+        "阶段",
+        "练习"
+      ],
+      "variants": [
+        {
+          "id": "38052e7b-91e7-51c4-940a-c44bd35a6f25-default",
+          "name": "默认",
+          "content": "根据目标、基础和可用时间制定学习路径。按先后依赖安排阶段，每阶段给出重点、练习和可判断是否掌握的标准，优先覆盖必需知识；资源用类型描述，具体链接必须核实。\n目标、基础、时间：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428949,
+      "useCount": 0
+    },
+    {
+      "id": "79d23c11-7ca9-5dcf-804b-8715c0303b38",
+      "title": "出题检验掌握",
+      "categoryId": "learning",
+      "tags": [
+        "测验",
+        "难度",
+        "解析"
+      ],
+      "variants": [
+        {
+          "id": "79d23c11-7ca9-5dcf-804b-8715c0303b38-default",
+          "name": "默认",
+          "content": "围绕以下知识范围生成一组自编练习，覆盖理解、应用与常见错误，难度逐步增加。题目先集中输出，答案与解析另列，确保条件完整且答案可验证；不要宣称是官方真题。\n知识范围、题数、水平：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428948,
+      "useCount": 0
+    },
+    {
+      "id": "fd0f828e-6fb4-5f6b-ab7b-127db0490f02",
+      "title": "分析错题原因",
+      "categoryId": "learning",
+      "tags": [
+        "错题",
+        "推理",
+        "纠正"
+      ],
+      "variants": [
+        {
+          "id": "fd0f828e-6fb4-5f6b-ab7b-127db0490f02-default",
+          "name": "默认",
+          "content": "分析以下题目和我的作答，定位最早出现的错误，区分概念、计算与审题问题。给出正确推理和一条改进建议，再出一道结构相似但数据不同的练习，附答案；不要只报最终结果。\n题目、作答与参考答案：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428947,
+      "useCount": 0
+    },
+    {
+      "id": "2aa282c5-e40a-5127-924d-6bc2302a23a1",
+      "title": "查证具体说法",
+      "categoryId": "research",
+      "tags": [
+        "查证",
+        "来源",
+        "时效"
+      ],
+      "variants": [
+        {
+          "id": "2aa282c5-e40a-5127-924d-6bc2302a23a1-default",
+          "name": "默认",
+          "content": "查证以下说法是否成立。优先查找一手来源，注明发布日期、适用范围和直接链接，区分支持、反证与未知；不要把搜索摘要当作证据。无法联网时明确说明，列出需要查证的内容。\n说法：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428940,
+      "useCount": 0
+    },
+    {
+      "id": "c3d8f72e-fe9f-51a9-a470-a94200dd648f",
+      "title": "调研陌生领域",
+      "categoryId": "research",
+      "tags": [
+        "调研",
+        "概览",
+        "资料"
+      ],
+      "variants": [
+        {
+          "id": "c3d8f72e-fe9f-51a9-a470-a94200dd648f-default",
+          "name": "默认",
+          "content": "围绕以下问题开展入门调研，整理基本概念、主要参与者、常见做法、争议与仍未知的问题。优先使用官方资料或原始研究，给出可核查链接和日期；控制范围，避免无关历史。\n问题、范围与用途：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428939,
+      "useCount": 0
+    },
+    {
+      "id": "d6020b61-0683-5bff-a24b-67fff3473fe7",
+      "title": "整理近期变化",
+      "categoryId": "research",
+      "tags": [
+        "动态",
+        "时间线",
+        "影响"
+      ],
+      "variants": [
+        {
+          "id": "d6020b61-0683-5bff-a24b-67fff3473fe7-default",
+          "name": "默认",
+          "content": "查询以下主题在指定时间范围内的重要变化，按发生时间整理事件、原始来源和实际影响，区分发布日期与事件日期。重复报道合并，传闻单独标注；无法联网时不要编造动态。\n主题与时间范围：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428938,
+      "useCount": 0
+    },
+    {
+      "id": "9f9dfbdd-f977-530f-8ac0-96d83191c0c0",
+      "title": "寻找可用资源",
+      "categoryId": "research",
+      "tags": [
+        "检索",
+        "筛选",
+        "资源"
+      ],
+      "variants": [
+        {
+          "id": "9f9dfbdd-f977-530f-8ac0-96d83191c0c0-default",
+          "name": "默认",
+          "content": "为以下需求寻找可直接使用的资料或工具，按硬性条件筛选，只保留少量匹配项。逐项列出用途、访问链接、费用或许可、限制及核查日期；信息缺失标为未知，不仅依据宣传推荐。\n需求与硬性条件：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428937,
+      "useCount": 0
+    },
+    {
+      "id": "9a9daf86-2745-53ae-b6b2-df61da530ffd",
+      "title": "撰写工作汇报",
+      "categoryId": "office",
+      "tags": [
+        "汇报",
+        "成果",
+        "阻碍"
+      ],
+      "variants": [
+        {
+          "id": "9a9daf86-2745-53ae-b6b2-df61da530ffd-default",
+          "name": "默认",
+          "content": "根据以下工作事实写一份简洁汇报，包含已完成成果、与目标的差距、阻碍和下一步。用具体结果代替空泛表态，数字只取自材料，未完成事项如实说明。\n受众与周期：[填写]\n工作事实：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428930,
+      "useCount": 0
+    },
+    {
+      "id": "d339a90a-37a8-5f39-9eb3-bd10e494e737",
+      "title": "编写操作流程",
+      "categoryId": "office",
+      "tags": [
+        "流程",
+        "步骤",
+        "检查点"
+      ],
+      "variants": [
+        {
+          "id": "d339a90a-37a8-5f39-9eb3-bd10e494e737-default",
+          "name": "默认",
+          "content": "将以下做法整理成可执行的操作流程，写明适用范围、准备条件、顺序步骤、检查点与异常处理。每步说明动作和完成标准，不省略必要前提，不猜测缺失操作。\n流程用途与现有做法：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428929,
+      "useCount": 0
+    },
+    {
+      "id": "ded550c1-aa22-58eb-a40d-e412811c36de",
+      "title": "起草项目提案",
+      "categoryId": "office",
+      "tags": [
+        "提案",
+        "资源",
+        "审批"
+      ],
+      "variants": [
+        {
+          "id": "ded550c1-aa22-58eb-a40d-e412811c36de-default",
+          "name": "默认",
+          "content": "根据以下材料起草项目提案，说明要解决的问题、目标、实施范围、关键安排、所需资源、风险和验收方式。区分事实与估算，未提供预算或时间时标为待确认，便于审批者做决定。\n项目材料与审批对象：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428928,
+      "useCount": 0
+    },
+    {
+      "id": "a4110865-56f6-5d1f-b0bc-d218f49c16b1",
+      "title": "编写岗位简历",
+      "categoryId": "office",
+      "tags": [
+        "简历",
+        "经历",
+        "匹配"
+      ],
+      "variants": [
+        {
+          "id": "a4110865-56f6-5d1f-b0bc-d218f49c16b1-default",
+          "name": "默认",
+          "content": "根据真实经历和岗位要求改写简历要点，突出相关职责、做法和成果。使用清楚的行动句，不编造经验、指标或资格；缺少可量化证据时保留具体事实。列出岗位匹配缺口，不夸大胜任程度。\n岗位要求与经历：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428927,
+      "useCount": 0
+    },
+    {
+      "id": "9b636c1b-c73a-5ed0-a178-9c106e1a6e47",
+      "title": "起草工作邮件",
+      "categoryId": "communication",
+      "tags": [
+        "邮件",
+        "诉求",
+        "礼貌"
+      ],
+      "variants": [
+        {
+          "id": "9b636c1b-c73a-5ed0-a178-9c106e1a6e47-default",
+          "name": "默认",
+          "content": "根据以下情况起草一封工作邮件，明确目的、必要背景、希望对方采取的动作及期限。语气符合双方关系，简洁礼貌；不擅自承诺未授权事项。输出主题与正文。\n收件人关系、情况、诉求与期限：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428920,
+      "useCount": 0
+    },
+    {
+      "id": "07bd4042-483c-5f0d-ad3d-d7067368f1c5",
+      "title": "表达拒绝与边界",
+      "categoryId": "communication",
+      "tags": [
+        "拒绝",
+        "边界",
+        "措辞"
+      ],
+      "variants": [
+        {
+          "id": "07bd4042-483c-5f0d-ad3d-d7067368f1c5-default",
+          "name": "默认",
+          "content": "为以下情况写一段可直接发送的拒绝回复。明确无法接受的事项和可接受范围，理由简短，不指责、不含糊承诺；确有替代方案时提供，没有则不硬凑。\n关系、情况与底线：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428919,
+      "useCount": 0
+    },
+    {
+      "id": "5a15be68-2d9a-5a95-aa1e-42aa18fcc642",
+      "title": "反馈具体问题",
+      "categoryId": "communication",
+      "tags": [
+        "反馈",
+        "事实",
+        "改进"
+      ],
+      "variants": [
+        {
+          "id": "5a15be68-2d9a-5a95-aa1e-42aa18fcc642-default",
+          "name": "默认",
+          "content": "将以下情况写成一次建设性反馈：先描述可观察事实，再说明影响、期望和具体改进动作。避免推测动机或评价人格，区分已知事实与我的感受，语气直接且尊重。\n对象、事实与期望：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428918,
+      "useCount": 0
+    },
+    {
+      "id": "500f90aa-b401-523e-b185-97af42f4bb4e",
+      "title": "准备协商方案",
+      "categoryId": "communication",
+      "tags": [
+        "谈判",
+        "底线",
+        "让步"
+      ],
+      "variants": [
+        {
+          "id": "500f90aa-b401-523e-b185-97af42f4bb4e-default",
+          "name": "默认",
+          "content": "为以下协商准备开场表达、核心理由、可能异议及回应。列出目标、底线、可交换条件与退出条件，不编造筹码，不承诺超出权限的事情；建议应符合双方现实约束。\n事项、双方诉求与可让步范围：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428917,
+      "useCount": 0
+    },
+    {
+      "id": "aed699db-df0f-568d-8d18-c2dfdb042008",
+      "title": "拆解可执行任务",
+      "categoryId": "planning",
+      "tags": [
+        "拆解",
+        "依赖",
+        "验收"
+      ],
+      "variants": [
+        {
+          "id": "aed699db-df0f-568d-8d18-c2dfdb042008-default",
+          "name": "默认",
+          "content": "将以下目标拆成可执行任务，按依赖排序。每项写明交付物、完成标准、前置条件与粗略耗时，区分估算和确定信息；避免把一个动作拆成无意义小步骤。\n目标、期限与资源：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428910,
+      "useCount": 0
+    },
+    {
+      "id": "3fafd045-a601-5f95-9785-b868fa6c895e",
+      "title": "安排一周工作",
+      "categoryId": "planning",
+      "tags": [
+        "排期",
+        "时间块",
+        "优先级"
+      ],
+      "variants": [
+        {
+          "id": "3fafd045-a601-5f95-9785-b868fa6c895e-default",
+          "name": "默认",
+          "content": "根据以下任务、固定安排和可用时段制定一周计划。优先处理有期限和高影响任务，保留缓冲，标出无法容纳的事项；不要重叠安排或假设额外工作时间。\n任务、期限、固定安排与可用时段：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428909,
+      "useCount": 0
+    },
+    {
+      "id": "244d9ace-3255-5cf1-9884-a7fa20a7521f",
+      "title": "排查计划风险",
+      "categoryId": "planning",
+      "tags": [
+        "风险",
+        "预案",
+        "触发点"
+      ],
+      "variants": [
+        {
+          "id": "244d9ace-3255-5cf1-9884-a7fa20a7521f-default",
+          "name": "默认",
+          "content": "检查以下实施计划的依赖、资源冲突、易延误环节和失败后果。只列与实际条件相关的风险，给出预防动作、预警信号和备用方案，按影响与发生可能性排序。\n计划与已知限制：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428908,
+      "useCount": 0
+    },
+    {
+      "id": "06d64974-8e01-5488-a1b3-3a45129a5042",
+      "title": "复盘已完成项目",
+      "categoryId": "planning",
+      "tags": [
+        "复盘",
+        "偏差",
+        "改进"
+      ],
+      "variants": [
+        {
+          "id": "06d64974-8e01-5488-a1b3-3a45129a5042-default",
+          "name": "默认",
+          "content": "根据以下项目记录比较目标与实际结果，分析偏差、有效做法和问题原因。区分证据支持的原因与假设，最后提出少量具体改进动作及验证方式；避免事后归咎个人。\n目标、结果与过程记录：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428907,
+      "useCount": 0
+    },
+    {
+      "id": "d5d0cfd5-c946-580c-accd-bd4400e50542",
+      "title": "比较候选方案",
+      "categoryId": "decisions",
+      "tags": [
+        "比较",
+        "权衡",
+        "选择"
+      ],
+      "variants": [
+        {
+          "id": "d5d0cfd5-c946-580c-accd-bd4400e50542-default",
+          "name": "默认",
+          "content": "比较以下候选方案，先检查硬性条件，再按我的重点评估收益、代价和风险。用表格列出有依据的差异，未知项标为待查；给出条件化建议，说明什么情况会改变选择。\n需求、候选方案与优先级：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428900,
+      "useCount": 0
+    },
+    {
+      "id": "733689a4-0758-5546-9507-1d7d231f17c7",
+      "title": "评估购买必要性",
+      "categoryId": "decisions",
+      "tags": [
+        "购买",
+        "预算",
+        "替代"
+      ],
+      "variants": [
+        {
+          "id": "733689a4-0758-5546-9507-1d7d231f17c7-default",
+          "name": "默认",
+          "content": "根据我的用途、现有替代品和预算，评估是否需要购买以下产品。比较不买、低成本替代和购买的实际差异，计算成本时写明假设；型号、价格与售后信息需实时核查，不默认推荐贵款。\n产品、用途、已有物品与预算：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428899,
+      "useCount": 0
+    },
+    {
+      "id": "f2cd1736-9ef3-57aa-ba86-e3ca59f0b85e",
+      "title": "检验决策假设",
+      "categoryId": "decisions",
+      "tags": [
+        "假设",
+        "反证",
+        "试验"
+      ],
+      "variants": [
+        {
+          "id": "f2cd1736-9ef3-57aa-ba86-e3ca59f0b85e-default",
+          "name": "默认",
+          "content": "审视以下决定背后的关键假设，指出哪些已有证据、哪些只是推测。寻找可能推翻结论的事实，设计低成本验证方法，并写明继续、调整或放弃的判断条件。\n决定、理由与现有证据：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428898,
+      "useCount": 0
+    },
+    {
+      "id": "324cae5f-56b9-5c7c-82f1-188f8aa77718",
+      "title": "权衡个人安排",
+      "categoryId": "decisions",
+      "tags": [
+        "取舍",
+        "生活",
+        "约束"
+      ],
+      "variants": [
+        {
+          "id": "324cae5f-56b9-5c7c-82f1-188f8aa77718-default",
+          "name": "默认",
+          "content": "帮助我比较以下生活或职业安排，结合时间、费用、精力和我明确表达的偏好。区分可逆与难以撤回的选择，指出缺失信息和代价；给出可先尝试的小步骤，不替我设定价值观。\n选项、约束与偏好：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428897,
+      "useCount": 0
+    },
+    {
+      "id": "5ea467c1-4e30-5c6e-a7be-27b9232e8ca2",
+      "title": "整理功能需求",
+      "categoryId": "product",
+      "tags": [
+        "需求",
+        "范围",
+        "验收"
+      ],
+      "variants": [
+        {
+          "id": "5ea467c1-4e30-5c6e-a7be-27b9232e8ca2-default",
+          "name": "默认",
+          "content": "将以下想法整理成清晰的功能需求，写明目标用户、待解决问题、使用流程、范围内外和验收条件。区分明确要求、假设与待确认项，不凭空增加功能或提前指定技术方案。\n想法与限制：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428890,
+      "useCount": 0
+    },
+    {
+      "id": "e4279998-69f7-5648-a96b-83b1a865d042",
+      "title": "梳理用户流程",
+      "categoryId": "product",
+      "tags": [
+        "用户流程",
+        "状态",
+        "恢复"
+      ],
+      "variants": [
+        {
+          "id": "e4279998-69f7-5648-a96b-83b1a865d042-default",
+          "name": "默认",
+          "content": "根据以下产品场景梳理用户从入口到完成目标的步骤，列出每步输入、反馈和退出方式。补齐加载、空数据、失败、重试及恢复路径，指出流程断点，避免增加无依据的页面。\n场景与已有功能：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428889,
+      "useCount": 0
+    },
+    {
+      "id": "d1d6b208-344f-535d-a212-1215019b2346",
+      "title": "撰写界面提示",
+      "categoryId": "product",
+      "tags": [
+        "微文案",
+        "操作",
+        "错误"
+      ],
+      "variants": [
+        {
+          "id": "d1d6b208-344f-535d-a212-1215019b2346-default",
+          "name": "默认",
+          "content": "为以下界面状态编写简短文案，包括标题、说明和必要的按钮文字。明确发生了什么、用户能做什么，避免责怪用户和含糊的“异常”；删除确认要说明实际后果，不夸大可恢复性。\n界面状态、用户动作与真实行为：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428888,
+      "useCount": 0
+    },
+    {
+      "id": "4b9b09bf-b5a9-5dcb-aeaa-f2bbb80745ed",
+      "title": "归纳用户反馈",
+      "categoryId": "product",
+      "tags": [
+        "用户反馈",
+        "归因",
+        "排序"
+      ],
+      "variants": [
+        {
+          "id": "4b9b09bf-b5a9-5dcb-aeaa-f2bbb80745ed-default",
+          "name": "默认",
+          "content": "整理以下用户反馈，按实际问题聚类，保留原始反馈编号，区分症状、需求与建议方案。结合频率、影响和已有证据排序，列出需进一步验证的假设；不要把少数意见当成所有用户需求。\n反馈与产品背景：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428887,
+      "useCount": 0
+    },
+    {
+      "id": "09cce774-a1bf-50f0-952c-26e35b3b8baa",
+      "title": "实现明确功能",
+      "categoryId": "coding",
+      "tags": [
+        "实现",
+        "兼容",
+        "验证"
+      ],
+      "variants": [
+        {
+          "id": "09cce774-a1bf-50f0-952c-26e35b3b8baa-default",
+          "name": "默认",
+          "content": "在现有项目中实现以下功能。先读取相关代码和约定，再做满足需求的最小改动，保持现有接口及无关行为兼容，保留他人改动。运行相关验证，最后说明变更、结果和未验证边界。\n功能与验收要求：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428880,
+      "useCount": 0
+    },
+    {
+      "id": "e3737a2e-3e34-5c96-87d0-89df11138a5f",
+      "title": "定位并修复故障",
+      "categoryId": "coding",
+      "tags": [
+        "调试",
+        "复现",
+        "修复"
+      ],
+      "variants": [
+        {
+          "id": "e3737a2e-3e34-5c96-87d0-89df11138a5f-default",
+          "name": "默认",
+          "content": "根据以下现象、日志和代码定位故障，先确认复现路径和根因，再做最小修复。区分证据与猜测，避免通过吞掉异常掩盖问题；补充能捕获该错误的回归验证。\n现象、复现步骤与日志：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428879,
+      "useCount": 0
+    },
+    {
+      "id": "9a2454e6-1fbb-5cc1-aa54-ab2cc4437cae",
+      "title": "重构指定模块",
+      "categoryId": "coding",
+      "tags": [
+        "重构",
+        "行为保真",
+        "范围"
+      ],
+      "variants": [
+        {
+          "id": "9a2454e6-1fbb-5cc1-aa54-ab2cc4437cae-default",
+          "name": "默认",
+          "content": "重构以下指定模块，目标是降低重复和复杂度。先确认公开接口、调用方与现有行为，在范围内渐进修改，保留兼容性；不顺带替换架构或增加功能。用相关测试验证行为未变。\n模块路径、目标与边界：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428878,
+      "useCount": 0
+    },
+    {
+      "id": "e75684ca-3df1-5ffc-84ba-52263720f08a",
+      "title": "设计有效测试",
+      "categoryId": "coding",
+      "tags": [
+        "测试",
+        "边界",
+        "失败路径"
+      ],
+      "variants": [
+        {
+          "id": "e75684ca-3df1-5ffc-84ba-52263720f08a-default",
+          "name": "默认",
+          "content": "为以下功能补充有价值的测试，先确认真实接口与测试工具。覆盖核心行为、边界和失败路径，避免只镜像实现或过度 mock；测试应能在行为错误时失败。运行测试并报告结果。\n功能、路径与重点风险：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428877,
+      "useCount": 0
+    },
+    {
+      "id": "9267bb08-a5b4-57ae-b9e1-b56ddc73064f",
+      "title": "清洗表格数据",
+      "categoryId": "data",
+      "tags": [
+        "清洗",
+        "缺失",
+        "重复"
+      ],
+      "variants": [
+        {
+          "id": "9267bb08-a5b4-57ae-b9e1-b56ddc73064f-default",
+          "name": "默认",
+          "content": "检查以下表格的数据类型、缺失值、重复记录和格式不一致，先给出清洗规则，再输出清洗结果与变更记录。保留原始标识，不猜填缺失事实；去重依据不明时标为待确认。\n数据与字段说明：[粘贴或附文件]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428870,
+      "useCount": 0
+    },
+    {
+      "id": "20065081-50b8-58fe-b1db-96b7c1e9c769",
+      "title": "分析数据变化",
+      "categoryId": "data",
+      "tags": [
+        "分析",
+        "趋势",
+        "口径"
+      ],
+      "variants": [
+        {
+          "id": "20065081-50b8-58fe-b1db-96b7c1e9c769-default",
+          "name": "默认",
+          "content": "分析以下数据的趋势、异常和分组差异，先核对指标口径、时间范围与缺失情况。写出计算依据，区分相关性与因果；样本不足时说明限制，不把波动直接解释为业务结论。\n数据、字段与分析问题：[粘贴或附文件]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428869,
+      "useCount": 0
+    },
+    {
+      "id": "ba78e90e-7630-5131-baad-7815e8d2c999",
+      "title": "编写表格公式",
+      "categoryId": "data",
+      "tags": [
+        "公式",
+        "表格",
+        "边界"
+      ],
+      "variants": [
+        {
+          "id": "ba78e90e-7630-5131-baad-7815e8d2c999-default",
+          "name": "默认",
+          "content": "为以下表格需求编写可直接使用的公式，按指定软件和版本处理。说明放在哪个单元格及如何填充，并用示例核对空值、错误值、重复值和范围边界；不要使用该版本不支持的函数。\n软件版本、列结构与目标：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428868,
+      "useCount": 0
+    },
+    {
+      "id": "259778d5-5392-5c1d-964e-e6d51d4fd24c",
+      "title": "转换结构化格式",
+      "categoryId": "data",
+      "tags": [
+        "转换",
+        "JSON",
+        "校验"
+      ],
+      "variants": [
+        {
+          "id": "259778d5-5392-5c1d-964e-e6d51d4fd24c-default",
+          "name": "默认",
+          "content": "把以下内容转换为指定数据结构。严格遵守字段名、类型和输出格式，不添加未知信息，缺失值按指定规则处理；保持记录顺序，无法可靠识别的项目单独列出。\n目标结构及缺失规则：[填写]\n原始内容：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428867,
+      "useCount": 0
+    },
+    {
+      "id": "f6f4b0d9-2e0f-5dc0-b10c-935d44af9d04",
+      "title": "构思故事情节",
+      "categoryId": "creative",
+      "tags": [
+        "故事",
+        "冲突",
+        "因果"
+      ],
+      "variants": [
+        {
+          "id": "f6f4b0d9-2e0f-5dc0-b10c-935d44af9d04-default",
+          "name": "默认",
+          "content": "根据以下设定提出三个方向不同的故事方案，分别写出主角目标、核心阻碍、关键转折和结局。情节变化必须有因果，遵守设定和禁用元素；避免只换人物名字或背景。\n设定、风格与限制：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428860,
+      "useCount": 0
+    },
+    {
+      "id": "0b1a6b62-9a3e-5f96-9393-258886e6c318",
+      "title": "策划内容选题",
+      "categoryId": "creative",
+      "tags": [
+        "选题",
+        "受众",
+        "角度"
+      ],
+      "variants": [
+        {
+          "id": "0b1a6b62-9a3e-5f96-9393-258886e6c318-default",
+          "name": "默认",
+          "content": "围绕以下主题和受众提出五个差异明确的内容选题，每个写明切入角度、读者收益和可使用的素材。避免标题党、重复话题及无资料支撑的热点，指出需要补充的事实。\n主题、受众、渠道与已有素材：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428859,
+      "useCount": 0
+    },
+    {
+      "id": "900af7b9-a34e-56e7-9b7a-ed27cb813b6c",
+      "title": "生成命名方案",
+      "categoryId": "creative",
+      "tags": [
+        "命名",
+        "辨识度",
+        "风格"
+      ],
+      "variants": [
+        {
+          "id": "900af7b9-a34e-56e7-9b7a-ed27cb813b6c-default",
+          "name": "默认",
+          "content": "为以下产品或活动提出八个风格不同但符合定位的名称，说明读音、含义与可能歧义。避免难读、生僻和空泛拼词；不要声称商标、域名或账号可用，另列需要核查的项目。\n对象、受众、风格与禁用词：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428858,
+      "useCount": 0
+    },
+    {
+      "id": "0fdd80f7-d046-5130-8b45-09605f1a358d",
+      "title": "编写视觉创作说明",
+      "categoryId": "creative",
+      "tags": [
+        "视觉",
+        "构图",
+        "画面"
+      ],
+      "variants": [
+        {
+          "id": "0fdd80f7-d046-5130-8b45-09605f1a358d-default",
+          "name": "默认",
+          "content": "将以下想法整理成可用于图像创作的描述，明确主体、动作、环境、构图、光线、色彩和风格。只加入服务于主题的细节，说明必须保留及排除的元素；画面文字按提供内容写，不编造标识。\n想法、用途、比例与限制：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428857,
+      "useCount": 0
+    }
+  ]
+}

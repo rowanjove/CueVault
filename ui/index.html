@@ -1,0 +1,3605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CueVault · 提示词库</title>
+<style>
+  :root{
+    color-scheme:light;
+    --bg:#f7f6f3;
+    --surface:#ffffff;
+    --subtle:#e8e6e0;
+    --hover:#e6e4dc;
+    --text:#1c1c1a;
+    --secondary:#4a4944;
+    --tertiary:#6e6c66;
+    --line:#e4e2db;
+    --line-strong:#d4d1c8;
+    --accent:#23483d;
+    --accent-soft:#e5eeea;
+    --danger:#9d3434;
+    --star:#8a5e28;
+    --btn-bg:#23483d;
+    --btn-fg:#f6f5f1;
+    --btn-bg-hover:#1a3830;
+    --shadow:0 18px 50px rgba(28,28,26,.14);
+    --radius:6px;
+  }
+  [data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#131311;
+    --surface:#1c1c1a;
+    --subtle:#2a2a27;
+    --hover:#242422;
+    --text:#f4f3ef;
+    --secondary:#c9c7bf;
+    --tertiary:#9c9a92;
+    --line:#31312d;
+    --line-strong:#3c3c37;
+    --accent:#9ec7b6;
+    --accent-soft:#24312c;
+    --danger:#f0aaaa;
+    --star:#e0b56a;
+    --btn-bg:#f3f2ee;
+    --btn-fg:#1b1b19;
+    --btn-bg-hover:#e4e2db;
+    --shadow:0 18px 50px rgba(0,0,0,.46);
+  }
+  *{box-sizing:border-box}
+  html{height:100%}
+  body{
+    min-height:100%;
+    margin:0;
+    font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    background:var(--bg);
+    color:var(--text);
+    text-rendering:optimizeLegibility;
+    -webkit-font-smoothing:antialiased;
+    transition:background-color .16s ease,color .16s ease;
+  }
+  button,input,textarea,select{font:inherit;color:inherit}
+  button{cursor:pointer;background:none;border:0;padding:0;user-select:none}
+  [hidden]{display:none !important}
+  :focus{outline:none}
+  :focus-visible{
+    outline:2px solid color-mix(in srgb,var(--accent) 72%,transparent);
+    outline-offset:2px;
+  }
+  ::selection{background:color-mix(in srgb,var(--accent) 22%,transparent)}
+  input::placeholder,textarea::placeholder{color:var(--tertiary)}
+
+  .app{
+    min-height:100vh;
+    min-height:100dvh;
+    display:grid;
+    grid-template-columns:220px minmax(0,1fr);
+    align-items:start;
+  }
+  .sidebar,.main,.category-list,.prompt-grid{min-width:0}
+
+  .sidebar{
+    position:sticky;
+    top:0;
+    height:100vh;
+    height:100dvh;
+    max-height:100dvh;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    background:var(--surface);
+    border-right:1px solid var(--line);
+  }
+  .brand{
+    padding:18px 16px 6px;
+  }
+  .brand strong{
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:-.01em;
+  }
+  .nav-label{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:14px;
+    padding:0 10px 0 16px;
+    height:28px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--secondary);
+  }
+  .nav-actions{
+    display:flex;
+    align-items:center;
+    gap:2px;
+  }
+  .category-action-btn{
+    width:24px;
+    height:24px;
+    border-radius:var(--radius);
+    color:var(--secondary);
+    display:grid;
+    place-items:center;
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .category-action-btn svg{width:14px;height:14px}
+  .category-action-btn:hover{background:var(--hover);color:var(--text)}
+  .category-action-btn.is-active{
+    background:var(--accent-soft);
+    color:var(--accent);
+  }
+  .category-add{
+    width:24px;
+    height:24px;
+    border-radius:var(--radius);
+    color:var(--secondary);
+    display:grid;
+    place-items:center;
+  }
+  .category-add svg{width:14px;height:14px}
+  .category-add:hover{background:var(--hover);color:var(--text)}
+  .category-list{
+    flex:1;
+    min-height:0;
+    overflow:auto;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    padding:4px 8px 8px;
+    scrollbar-width:thin;
+    scrollbar-color:var(--line-strong) transparent;
+  }
+  .category-btn{
+    width:100%;
+    height:32px;
+    padding:0 8px;
+    border-radius:var(--radius);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    text-align:left;
+    font-size:13px;
+    color:var(--secondary);
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .category-btn > span:first-child{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .category-btn:hover{background:var(--hover);color:var(--text)}
+  .category-btn.active{
+    background:var(--subtle);
+    color:var(--text);
+    font-weight:600;
+    box-shadow:inset 2px 0 0 var(--accent);
+  }
+  .count{
+    flex:0 0 auto;
+    font-size:13px;
+    font-variant-numeric:tabular-nums;
+    color:var(--secondary);
+  }
+  .category-btn.active .count{color:var(--text)}
+  .cat-side{display:flex;align-items:center;gap:3px;flex:0 0 auto}
+  .cat-x{
+    width:18px;
+    height:18px;
+    display:grid;
+    place-items:center;
+    border-radius:4px;
+    color:var(--tertiary);
+    font-size:13px;
+    line-height:1;
+    cursor:pointer;
+  }
+  .cat-x:hover{background:color-mix(in srgb,var(--danger) 10%,transparent);color:var(--danger)}
+  .cat-drag{
+    width:20px;
+    height:20px;
+    display:grid;
+    place-items:center;
+    border-radius:4px;
+    color:var(--tertiary);
+    cursor:grab;
+    touch-action:none;
+    user-select:none;
+  }
+  .cat-drag:hover{background:var(--hover);color:var(--text)}
+  .cat-drag:active{cursor:grabbing}
+  .cat-drag svg{width:13px;height:13px;pointer-events:none}
+  .category-btn.is-editing-item{
+    user-select:none;
+    position:relative;
+  }
+  .category-btn.is-dragging{
+    opacity:0.35 !important;
+    background:var(--hover) !important;
+  }
+  .category-btn.drag-over-top{
+    position:relative;
+    background:var(--subtle);
+  }
+  .category-btn.drag-over-top::before{
+    content:"";
+    position:absolute;
+    left:4px;
+    right:4px;
+    top:-2px;
+    height:3px;
+    background:var(--accent);
+    border-radius:2px;
+    z-index:10;
+  }
+  .category-btn.drag-over-bottom{
+    position:relative;
+    background:var(--subtle);
+  }
+  .category-btn.drag-over-bottom::after{
+    content:"";
+    position:absolute;
+    left:4px;
+    right:4px;
+    bottom:-2px;
+    height:3px;
+    background:var(--accent);
+    border-radius:2px;
+    z-index:10;
+  }
+  .sidebar-footer{
+    margin-top:auto;
+    border-top:1px solid var(--line);
+    padding:12px;
+  }
+  .appearance{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .appearance-label{font-size:13px}
+  .theme-btn{
+    height:28px;
+    padding:0 10px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--surface);
+    font-size:13px;
+    color:var(--text);
+  }
+  .theme-btn:hover{background:var(--hover)}
+
+  .main{
+    min-width:0;
+    width:100%;
+    padding:28px 32px 64px;
+    overflow:visible;
+  }
+  .page-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:18px;
+  }
+  .page-head h1{
+    margin:0;
+    font-size:22px;
+    font-weight:600;
+    letter-spacing:-.02em;
+    line-height:1.25;
+  }
+  .page-head p{
+    margin:4px 0 0;
+    font-size:13px;
+    color:var(--secondary);
+  }
+  .primary-btn,.save-inline{
+    height:32px;
+    padding:0 12px;
+    border-radius:var(--radius);
+    background:var(--btn-bg);
+    color:var(--btn-fg);
+    font-size:13px;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+    transition:background-color .12s ease;
+  }
+  .primary-btn svg{width:14px;height:14px}
+  .primary-btn:hover,.save-inline:hover{background:var(--btn-bg-hover)}
+  .primary-btn:active,.save-inline:active{background:var(--btn-bg-hover)}
+
+  .toolbar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding-bottom:12px;
+    margin-bottom:4px;
+  }
+  .search-wrap{
+    position:relative;
+    flex:0 1 280px;
+    min-width:180px;
+  }
+  .search-ico{
+    position:absolute;
+    left:9px;
+    top:50%;
+    width:15px;
+    height:15px;
+    transform:translateY(-50%);
+    color:var(--tertiary);
+    pointer-events:none;
+  }
+  .search-wrap input{
+    width:100%;
+    height:32px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    border-radius:var(--radius);
+    padding:0 64px 0 30px;
+  }
+  .kbd{
+    position:absolute;
+    right:8px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:11px;
+    line-height:1.4;
+    color:var(--tertiary);
+    border:1px solid var(--line);
+    background:var(--bg);
+    border-radius:4px;
+    padding:1px 4px;
+    pointer-events:none;
+  }
+  .toolbar-sep{
+    width:1px;
+    height:16px;
+    background:var(--line);
+    flex:0 0 auto;
+  }
+  .toolbar-spacer{flex:1 1 auto}
+  .text-btn{
+    height:32px;
+    padding:0 8px;
+    border-radius:var(--radius);
+    font-size:13px;
+    color:var(--secondary);
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .text-btn:hover{background:var(--hover);color:var(--text)}
+  .filter-btn{
+    height:32px;
+    padding:0 10px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--surface);
+    font-size:13px;
+    color:var(--secondary);
+    transition:background-color .12s ease,color .12s ease,border-color .12s ease;
+  }
+  .filter-btn:hover{color:var(--text)}
+  .filter-btn.is-active{
+    background:var(--subtle);
+    border-color:var(--line-strong);
+    color:var(--text);
+    font-weight:600;
+  }
+
+  .segmented{
+    display:inline-flex;
+    align-items:stretch;
+    height:32px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--surface);
+    overflow:hidden;
+  }
+  .segmented button{
+    padding:0 10px;
+    font-size:13px;
+    color:var(--secondary);
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .segmented button + button{box-shadow:inset 1px 0 0 var(--line)}
+  .segmented button:hover{background:var(--hover);color:var(--text)}
+  .segmented button.is-active{
+    background:var(--subtle);
+    color:var(--text);
+    font-weight:600;
+  }
+  .segmented button:focus-visible{outline-offset:-2px;z-index:1}
+
+
+  .prompt-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:12px;
+    align-items:stretch;
+  }
+  .prompt-card{
+    position:relative;
+    margin:0;
+    min-height:max(148px,min-content);
+    height:auto;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:14px 14px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--surface);
+    text-align:left;
+    cursor:pointer;
+    color:inherit;
+    user-select:auto;
+    transition:border-color .12s ease,transform .12s ease,box-shadow .12s ease;
+  }
+  .prompt-card::before{
+    content:"";
+    position:absolute;
+    left:0;top:10px;bottom:10px;
+    width:2px;
+    border-radius:2px;
+    background:transparent;
+    transition:background-color .12s ease;
+  }
+  .prompt-card:hover{
+    border-color:var(--line-strong);
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(28,28,26,.08);
+  }
+  .prompt-card:hover::before{background:var(--accent)}
+  .prompt-card:focus-visible{outline-offset:2px}
+  .card-head{
+    flex:0 0 auto;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .card-title{
+    margin:0;
+    min-width:0;
+    font-size:15px;
+    font-weight:600;
+    line-height:1.4;
+    max-height:calc(1.4em * 2);
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .card-copy{
+    width:28px;
+    height:28px;
+    flex:0 0 auto;
+    display:grid;
+    place-items:center;
+    border-radius:var(--radius);
+    color:var(--tertiary);
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .card-copy svg{width:15px;height:15px}
+  .card-copy:hover{
+    background:var(--hover);
+    color:var(--text);
+  }
+  .preview{
+    margin:0;
+    flex:0 0 auto;
+    height:4.5em;
+    max-height:4.5em;
+    font-size:13px;
+    line-height:1.5;
+    color:var(--secondary);
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .meta{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:6px;
+    min-width:0;
+    flex:0 0 auto;
+    margin-top:auto;
+  }
+  .tag{
+    flex:0 0 auto;
+    max-width:100%;
+    padding:2px 7px;
+    border-radius:999px;
+    background:var(--bg);
+    color:var(--secondary);
+    font-size:12px;
+    line-height:1.5;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .prompt-card .fav{
+    margin-left:auto;
+    width:28px;
+    height:28px;
+    flex:0 0 auto;
+    display:grid;
+    place-items:center;
+    border-radius:var(--radius);
+    color:var(--tertiary);
+  }
+  .prompt-card .fav svg{width:15px;height:15px}
+  .prompt-card .fav:hover{background:var(--hover);color:var(--text)}
+  .fav.on,.prompt-card:hover .fav.on{color:var(--star)}
+  .fav svg path{fill:none;stroke:currentColor;stroke-width:1.3;stroke-linejoin:round}
+  .fav.on svg path{fill:currentColor}
+  [data-theme="dark"] .prompt-card:hover{box-shadow:0 8px 20px rgba(0,0,0,.28)}
+
+  .empty{
+    grid-column:1 / -1;
+    padding:72px 16px;
+    text-align:center;
+  }
+  .empty-title{
+    margin:0;
+    font-size:15px;
+    font-weight:600;
+  }
+  .empty-hint{
+    margin:6px 0 0;
+    font-size:13px;
+    color:var(--secondary);
+  }
+
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(20,20,18,.46);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:100;
+  }
+  .overlay.open{display:flex;animation:fade .14s ease}
+  .modal{
+    width:min(760px,calc(100vw - 48px));
+    max-height:min(720px,calc(100vh - 48px));
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:8px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .overlay.open .modal{animation:rise .16s cubic-bezier(.2,.8,.2,1)}
+  .modal-head{
+    min-height:56px;
+    padding:8px 10px 8px 18px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .modal-head-left{
+    flex:1 1 auto;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .header-title-input{
+    flex:1 1 auto;
+    min-width:0;
+    height:36px;
+    border:0;
+    background:transparent;
+    font-size:18px;
+    font-weight:600;
+    letter-spacing:-.02em;
+    padding:0;
+  }
+  .modal.is-editing .header-title-input{
+    box-shadow:inset 0 -1px 0 var(--line);
+  }
+  .modal.is-editing .header-title-input:focus{
+    box-shadow:inset 0 -1px 0 var(--accent);
+  }
+  .header-category{
+    flex:0 0 132px;
+    height:32px;
+    border:1px solid transparent;
+    border-radius:var(--radius);
+    background:transparent;
+    padding:0 8px;
+    font-size:13px;
+    color:var(--secondary);
+  }
+  .header-category:not(:disabled){
+    border-color:var(--line);
+    background:var(--surface);
+    color:var(--text);
+  }
+  .header-category:disabled{
+    opacity:1;
+    appearance:none;
+    pointer-events:none;
+  }
+  .modal-actions{display:flex;align-items:center;gap:2px}
+  .action-sep{
+    width:1px;
+    height:16px;
+    background:var(--line);
+    margin:0 4px;
+  }
+  .icon-btn{
+    width:32px;
+    height:32px;
+    display:grid;
+    place-items:center;
+    border-radius:var(--radius);
+    color:var(--secondary);
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .icon-btn svg{width:16px;height:16px}
+  .icon-btn:hover{background:var(--hover);color:var(--text)}
+  .icon-btn.danger-icon:hover{
+    background:color-mix(in srgb,var(--danger) 10%,transparent);
+    color:var(--danger);
+  }
+  .mode-btn{
+    width:auto;
+    padding:0 10px;
+    font-size:13px;
+    font-weight:600;
+  }
+  .icon-btn.mode-btn.active{
+    background:var(--accent-soft);
+    color:var(--accent);
+  }
+
+  .modal-body{
+    flex:1;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    background:var(--bg);
+    overflow:hidden;
+  }
+  .content-toolbar{
+    height:42px;
+    display:flex;
+    align-items:stretch;
+    gap:4px;
+    padding:0 10px 0 4px;
+    border-bottom:1px solid var(--line);
+    background:var(--surface);
+  }
+  .variant-tabs{
+    display:flex;
+    align-items:stretch;
+    min-width:0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    margin-bottom:-1px;
+    scrollbar-width:none;
+  }
+  .variant-tabs::-webkit-scrollbar{display:none}
+  .variant-chip{
+    position:relative;
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    padding:0 12px;
+    border-bottom:2px solid transparent;
+    background:transparent;
+    color:var(--secondary);
+    font-size:13px;
+    white-space:nowrap;
+    transition:color .12s ease,border-color .12s ease;
+  }
+  .variant-chip:hover{color:var(--text)}
+  .variant-chip.active{
+    color:var(--text);
+    font-weight:600;
+    border-bottom-color:var(--accent);
+  }
+  .variant-chip-x{
+    width:16px;
+    height:16px;
+    display:grid;
+    place-items:center;
+    border-radius:4px;
+    color:var(--tertiary);
+    font-size:13px;
+    line-height:1;
+    opacity:0;
+  }
+  .variant-chip:hover .variant-chip-x,
+  .variant-chip.active .variant-chip-x{opacity:1}
+  .variant-chip-x:hover{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger)}
+  .variant-add,.copy-inline{
+    align-self:center;
+    width:28px;
+    height:28px;
+    display:grid;
+    place-items:center;
+    border-radius:var(--radius);
+    color:var(--secondary);
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .variant-add svg,.copy-inline svg{width:15px;height:15px}
+  .variant-add:hover,.copy-inline:hover{background:var(--hover);color:var(--text)}
+  .content-toolbar .toolbar-spacer{align-self:center}
+  .content-toolbar .save-inline{align-self:center;height:28px}
+  .prompt-editor{
+    flex:1 1 auto;
+    width:100%;
+    height:320px;
+    max-height:calc(100vh - 220px);
+    min-height:220px;
+    resize:none;
+    border:0;
+    outline:none;
+    background:transparent;
+    color:var(--text);
+    padding:18px 22px 24px;
+    font-size:15px;
+    line-height:1.7;
+    tab-size:2;
+    overflow:auto;
+  }
+  .prompt-editor:focus,.prompt-editor:focus-visible{outline:none;box-shadow:none}
+
+  .status{
+    position:fixed;
+    left:50%;
+    bottom:20px;
+    transform:translateX(-50%) translateY(8px);
+    background:#1c1c1a;
+    color:#f6f5f1;
+    padding:8px 12px;
+    border-radius:var(--radius);
+    font-size:13px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .16s ease,transform .16s ease;
+    z-index:150;
+    box-shadow:0 8px 24px rgba(28,28,26,.16);
+  }
+  [data-theme="dark"] .status{background:#f4f3ef;color:#1c1c1a}
+  .status.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .app-dialog-overlay{
+    position:fixed;
+    inset:0;
+    z-index:300;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(20,20,18,.46);
+  }
+  .app-dialog-overlay.open{display:flex;animation:fade .14s ease}
+  .app-dialog{
+    width:min(400px,92vw);
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    box-shadow:var(--shadow);
+    padding:20px;
+  }
+  .app-dialog-overlay.open .app-dialog{animation:rise .16s cubic-bezier(.2,.8,.2,1)}
+  .app-dialog h3{margin:0 0 8px;font-size:16px;font-weight:600}
+  .app-dialog p{
+    margin:0 0 14px;
+    color:var(--secondary);
+    font-size:13px;
+    line-height:1.6;
+    white-space:pre-line;
+  }
+  .app-dialog input{
+    width:100%;
+    height:36px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    border-radius:var(--radius);
+    padding:0 10px;
+    margin-bottom:14px;
+  }
+  .app-dialog-actions{display:flex;justify-content:flex-end;gap:8px}
+  .dialog-btn{
+    height:32px;
+    padding:0 12px;
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    background:var(--surface);
+    font-size:13px;
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .dialog-btn:hover{background:var(--hover)}
+  .dialog-btn.primary{
+    background:var(--btn-bg);
+    border-color:transparent;
+    color:var(--btn-fg);
+    font-weight:600;
+  }
+  .dialog-btn.primary:hover{background:var(--btn-bg-hover)}
+  .dialog-btn.danger{
+    background:transparent;
+    color:var(--danger);
+    border-color:color-mix(in srgb,var(--danger) 38%,var(--line));
+  }
+  .dialog-btn.danger:hover{background:color-mix(in srgb,var(--danger) 8%,transparent)}
+
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes rise{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation:none !important;
+      transition:none !important;
+    }
+  }
+
+  .prompt-pager{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:4px;
+    margin-top:18px;
+  }
+  .pager-status{
+    margin-right:8px;
+    font-size:13px;
+    color:var(--secondary);
+    font-variant-numeric:tabular-nums;
+  }
+  .pager-btn{
+    min-width:32px;
+    height:32px;
+    padding:0 8px;
+    border-radius:var(--radius);
+    color:var(--secondary);
+    font-size:13px;
+    font-variant-numeric:tabular-nums;
+    transition:background-color .12s ease,color .12s ease;
+  }
+  .pager-btn:hover{background:var(--hover);color:var(--text)}
+  .pager-btn.is-active{
+    background:var(--subtle);
+    color:var(--text);
+    font-weight:600;
+  }
+  .pager-btn:disabled{color:var(--tertiary);cursor:default}
+  .pager-btn:disabled:hover{background:transparent;color:var(--tertiary)}
+
+  @media (max-width:1280px){
+    .prompt-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  }
+  @media (max-width:1040px){
+    .prompt-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  }
+  @media (max-width:820px){
+    .app{grid-template-columns:1fr}
+    .sidebar{
+      position:relative;
+      height:auto;
+      max-height:none;
+      overflow:visible;
+      min-height:0;
+      border-right:0;
+      border-bottom:1px solid var(--line);
+    }
+    .category-list{
+      flex:1 1 auto;
+      width:100%;
+      flex-direction:row;
+      overflow-x:auto;
+      padding-bottom:8px;
+    }
+    .category-btn{width:auto;flex:0 0 auto}
+    .sidebar-footer{border-top:0;padding-top:0}
+    .main{padding:18px 14px 48px}
+    .page-head{align-items:flex-start}
+    .toolbar{flex-wrap:wrap}
+    .search-wrap{flex:1 1 100%;min-width:0}
+    .prompt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .overlay{padding:0}
+    .modal{
+      width:100%;
+      height:100%;
+      max-height:none;
+      border:0;
+      border-radius:0;
+    }
+    .prompt-editor{height:auto;max-height:none;flex:1}
+    .modal-head{align-items:flex-start;padding-top:12px}
+    .modal-head-left{flex-direction:column;align-items:stretch;gap:6px}
+    .header-category{flex-basis:auto;width:140px}
+  }
+  @media (max-width:560px){
+    .prompt-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><strong>CueVault · 提示词库</strong></div>
+    <div class="nav-label">
+      <span>分类</span>
+      <div class="nav-actions">
+        <button class="category-action-btn" id="editCategoryBtn" type="button" title="编辑分类" aria-label="编辑分类">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H2.5v-2.5l9-9z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="category-action-btn" id="addCategoryBtn" type="button" title="新建分类" aria-label="新建分类">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.2v9.6M3.2 8h9.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav id="categoryList" class="category-list" aria-label="分类"></nav>
+    <div class="sidebar-footer">
+      <div class="appearance">
+        <span class="appearance-label">外观</span>
+        <button type="button" id="themeToggle" class="theme-btn" aria-pressed="false">浅色</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="page-head">
+      <div>
+        <h1 id="pageTitle">全部提示词</h1>
+        <p id="pageSubtitle">0 条</p>
+      </div>
+      <button class="primary-btn" id="newPromptBtn" type="button">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.2v9.6M3.2 8h9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        新建提示词
+      </button>
+    </header>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg class="search-ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.15" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M10.3 10.3 13 13" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input id="searchInput" type="text" placeholder="搜索标题或内容" autocomplete="off" aria-label="搜索标题或内容">
+        <span class="kbd">⌘K</span>
+      </div>
+      <span class="toolbar-sep" aria-hidden="true"></span>
+      <div class="segmented" role="group" aria-label="排序">
+        <button class="seg-btn is-active" type="button" data-sort="updatedAt">最近更新</button>
+        <button class="seg-btn" type="button" data-sort="createdAt">创建时间</button>
+        <button class="seg-btn" type="button" data-sort="useCount">使用频次</button>
+      </div>
+      <button class="filter-btn" type="button" data-filter="favorite" aria-pressed="false">仅收藏</button>
+      <span class="toolbar-spacer"></span>
+      <button class="text-btn" id="importBtn" type="button">导入</button>
+      <button class="text-btn" id="exportBtn" type="button">导出</button>
+      <input type="file" id="importFile" accept=".json" hidden>
+    </div>
+
+    <section id="promptGrid" class="prompt-grid" aria-label="提示词"></section>
+    <nav id="promptPager" class="prompt-pager" aria-label="分页" hidden></nav>
+  </main>
+</div>
+
+<div class="overlay" id="detailOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titleInput">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <input id="titleInput" class="header-title-input" aria-label="标题" readonly>
+        <select id="categorySelect" class="header-category" aria-label="分类" disabled></select>
+      </div>
+      <div class="modal-actions">
+        <button class="icon-btn" id="restoreBtn" type="button" title="恢复未保存修改" aria-label="恢复未保存修改">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 8a4.8 4.8 0 1 0 1.4-3.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M3.1 3.2v3h3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn danger-icon" id="deleteBtn" type="button" title="删除提示词" aria-label="删除提示词">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 4.6h9.6M6.1 4.5V3.1h3.8v1.4M4.5 4.6l.45 8h6.1l.45-8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn mode-btn" id="editModeBtn" type="button" title="修改原始提示词，保存后生效">编辑</button>
+        <span class="action-sep" aria-hidden="true"></span>
+        <button class="icon-btn" id="closeModalBtn" type="button" title="关闭" aria-label="关闭">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4 4 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <div class="content-toolbar">
+        <div id="variantTabs" class="variant-tabs" role="tablist" aria-label="提示词场景"></div>
+        <button id="addVariantBtn" class="variant-add" type="button" title="添加场景" aria-label="添加场景">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.4v9.2M3.4 8h9.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+        <span class="toolbar-spacer"></span>
+        <button id="saveBtn" class="save-inline" type="button" hidden>保存</button>
+        <button id="copyBtn" class="copy-inline" type="button" title="复制当前提示词" aria-label="复制当前提示词">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.6" y="5.6" width="7.6" height="7.6" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M10.4 5.5V3.9c0-.7-.5-1.2-1.2-1.2H3.9c-.7 0-1.2.5-1.2 1.2v5.3c0 .7.5 1.2 1.2 1.2h1.6" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+        </button>
+      </div>
+      <textarea id="promptEditor" class="prompt-editor" aria-label="Prompt 内容" spellcheck="false"></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="status" id="statusToast" role="status" aria-live="polite">已复制</div>
+
+<div class="app-dialog-overlay" id="appDialogOverlay" aria-hidden="true">
+  <div class="app-dialog" role="dialog" aria-modal="true" aria-labelledby="appDialogTitle">
+    <h3 id="appDialogTitle">提示</h3>
+    <p id="appDialogMessage"></p>
+    <input id="appDialogInput" hidden autocomplete="off">
+    <div class="app-dialog-actions">
+      <button class="dialog-btn" id="appDialogCancel" type="button">取消</button>
+      <button class="dialog-btn primary" id="appDialogConfirm" type="button">确定</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'prompt_library_v7';
+const THEME_KEY = 'prompt_library_theme';
+const COPY_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.6" y="5.6" width="7.6" height="7.6" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M10.4 5.5V3.9c0-.7-.5-1.2-1.2-1.2H3.9c-.7 0-1.2.5-1.2 1.2v5.3c0 .7.5 1.2 1.2 1.2h1.6" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+const STAR_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.15 9.62 5.5l3.68.5-2.68 2.55.66 3.7L8 10.5l-3.28 1.75.66-3.7L2.7 6l3.68-.5L8 2.15z"/></svg>';
+
+const seedData = {
+  "categories": [
+    {
+      "id": "all",
+      "name": "全部",
+      "system": true
+    },
+    {
+      "id": "writing",
+      "name": "写作编辑",
+      "system": false
+    },
+    {
+      "id": "translation",
+      "name": "翻译表达",
+      "system": false
+    },
+    {
+      "id": "reading",
+      "name": "阅读提炼",
+      "system": false
+    },
+    {
+      "id": "learning",
+      "name": "学习训练",
+      "system": false
+    },
+    {
+      "id": "research",
+      "name": "信息研究",
+      "system": false
+    },
+    {
+      "id": "office",
+      "name": "办公文档",
+      "system": false
+    },
+    {
+      "id": "communication",
+      "name": "沟通协商",
+      "system": false
+    },
+    {
+      "id": "planning",
+      "name": "任务规划",
+      "system": false
+    },
+    {
+      "id": "decisions",
+      "name": "决策比较",
+      "system": false
+    },
+    {
+      "id": "product",
+      "name": "产品设计",
+      "system": false
+    },
+    {
+      "id": "coding",
+      "name": "编程实现",
+      "system": false
+    },
+    {
+      "id": "data",
+      "name": "数据处理",
+      "system": false
+    },
+    {
+      "id": "creative",
+      "name": "创意构思",
+      "system": false
+    }
+  ],
+  "prompts": [
+    {
+      "id": "59fbd7c8-750f-5281-8adb-91f4433bb752",
+      "title": "从要点写成文章",
+      "categoryId": "writing",
+      "tags": [
+        "文章",
+        "结构",
+        "成稿"
+      ],
+      "variants": [
+        {
+          "id": "59fbd7c8-750f-5281-8adb-91f4433bb752-default",
+          "name": "默认",
+          "content": "根据以下要点写一篇完整文章，面向指定读者和用途。先确定主线，再组织段落；使用具体、自然的语言，不虚构事实、数据或引语。缺少关键依据时明确标注，控制在目标篇幅内。\n读者与用途：[填写]\n篇幅：[填写]\n要点：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428980,
+      "useCount": 0
+    },
+    {
+      "id": "42ae5593-9d44-5174-a5f3-62c1928304ee",
+      "title": "润色现有文字",
+      "categoryId": "writing",
+      "tags": [
+        "润色",
+        "语气",
+        "可读性"
+      ],
+      "variants": [
+        {
+          "id": "42ae5593-9d44-5174-a5f3-62c1928304ee-default",
+          "name": "默认",
+          "content": "润色以下文字，改善语序、衔接和可读性，保持事实、立场及必要术语不变。删除套话与重复，避免夸大和机械排比；按指定语气输出可直接替换的正文，不附逐句解释。\n语气与用途：[填写]\n原文：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428979,
+      "useCount": 0
+    },
+    {
+      "id": "2b5dbf9e-4c1f-53d8-b70a-17f0d5df1894",
+      "title": "压缩到指定字数",
+      "categoryId": "writing",
+      "tags": [
+        "删减",
+        "篇幅",
+        "重点"
+      ],
+      "variants": [
+        {
+          "id": "2b5dbf9e-4c1f-53d8-b70a-17f0d5df1894-default",
+          "name": "默认",
+          "content": "将以下文字压缩到指定字数内，保留核心观点、关键证据、限制条件和结论。优先删掉重复与次要细节，不改变原意，不加入新信息。只输出压缩后的文本。\n字数上限：[填写]\n原文：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428978,
+      "useCount": 0
+    },
+    {
+      "id": "492f6cab-afbf-57f5-a840-1f54192308ff",
+      "title": "检查事实与表达",
+      "categoryId": "writing",
+      "tags": [
+        "校对",
+        "一致性",
+        "歧义"
+      ],
+      "variants": [
+        {
+          "id": "492f6cab-afbf-57f5-a840-1f54192308ff-default",
+          "name": "默认",
+          "content": "检查以下稿件的错别字、语病、前后矛盾、数字及名称一致性。分别列出确定错误和需要核实的事实，给出最小修改；无法从材料确认的内容不要判错。最后提供修订稿，保留原有风格。\n稿件：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428977,
+      "useCount": 0
+    },
+    {
+      "id": "ed9c77bb-be37-5137-8359-6e103f8075e4",
+      "title": "忠实翻译文本",
+      "categoryId": "translation",
+      "tags": [
+        "翻译",
+        "术语",
+        "保真"
+      ],
+      "variants": [
+        {
+          "id": "ed9c77bb-be37-5137-8359-6e103f8075e4-default",
+          "name": "默认",
+          "content": "将以下文本译为目标语言，准确保留信息、语气、数字及格式。专有名词与术语保持一致，不添加解释或省略限制条件；有歧义时在译文后简短注明。\n目标语言及地区：[填写]\n文本：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428970,
+      "useCount": 0
+    },
+    {
+      "id": "a8aaf919-da0a-5328-a01b-00def9c98f1a",
+      "title": "本地化界面文案",
+      "categoryId": "translation",
+      "tags": [
+        "本地化",
+        "界面",
+        "长度"
+      ],
+      "variants": [
+        {
+          "id": "a8aaf919-da0a-5328-a01b-00def9c98f1a-default",
+          "name": "默认",
+          "content": "把以下界面文案本地化为目标语言，兼顾自然表达、操作意图和长度限制。保留变量、占位符、快捷键及标记，不逐字硬译。按原键名输出对照表，有长度冲突时给出短版。\n语言与长度限制：[填写]\n文案：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428969,
+      "useCount": 0
+    },
+    {
+      "id": "c5071be3-fba8-59f1-bcac-f60fc82c42ab",
+      "title": "核对双语译文",
+      "categoryId": "translation",
+      "tags": [
+        "审译",
+        "漏译",
+        "对照"
+      ],
+      "variants": [
+        {
+          "id": "c5071be3-fba8-59f1-bcac-f60fc82c42ab-default",
+          "name": "默认",
+          "content": "对照原文检查译文的错译、漏译、语气偏差及术语不一致。只列有依据的问题，按原文片段、当前译文、建议修订、原因输出；最后给出完整修订译文。\n原文：[粘贴]\n译文：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428968,
+      "useCount": 0
+    },
+    {
+      "id": "78b1f895-b92c-5435-b10e-3a6fe33e0384",
+      "title": "准备外语口头表达",
+      "categoryId": "translation",
+      "tags": [
+        "口语",
+        "情境",
+        "对话"
+      ],
+      "variants": [
+        {
+          "id": "78b1f895-b92c-5435-b10e-3a6fe33e0384-default",
+          "name": "默认",
+          "content": "为以下真实场景准备自然、简短的外语表达。给出开场、核心诉求、常见追问和结束语，并附中文意思；区分礼貌正式与日常说法，不使用生硬书面语。\n语言、场景与诉求：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428967,
+      "useCount": 0
+    },
+    {
+      "id": "c69fe213-e4e9-55e8-a950-3d479306b82d",
+      "title": "提炼长文重点",
+      "categoryId": "reading",
+      "tags": [
+        "摘要",
+        "观点",
+        "证据"
+      ],
+      "variants": [
+        {
+          "id": "c69fe213-e4e9-55e8-a950-3d479306b82d-default",
+          "name": "默认",
+          "content": "根据以下原文提炼核心问题、主要观点、支撑证据与结论，保留影响理解的限制条件。每项标出对应段落或原文位置，区分作者观点和已证实事实；不引入外部知识。\n原文：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428960,
+      "useCount": 0
+    },
+    {
+      "id": "e3a23664-6c44-5784-a3e2-6e97b82f189d",
+      "title": "整理会议纪要",
+      "categoryId": "reading",
+      "tags": [
+        "会议",
+        "行动项",
+        "责任"
+      ],
+      "variants": [
+        {
+          "id": "e3a23664-6c44-5784-a3e2-6e97b82f189d-default",
+          "name": "默认",
+          "content": "将以下会议记录整理成议题、已达成决定、待确认事项和行动清单。行动项写明负责人、期限和依赖；记录中未指定的标为待确认，不自行分派。删掉重复讨论，保留分歧与重要理由。\n会议记录：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428959,
+      "useCount": 0
+    },
+    {
+      "id": "5d615582-4607-512b-9944-54cb18c69c96",
+      "title": "跨材料归纳观点",
+      "categoryId": "reading",
+      "tags": [
+        "归纳",
+        "分歧",
+        "出处"
+      ],
+      "variants": [
+        {
+          "id": "5d615582-4607-512b-9944-54cb18c69c96-default",
+          "name": "默认",
+          "content": "归纳以下多份材料的共同结论、分歧和各自证据，按主题组织，并标明材料名称或编号。不要把重复转述当成独立证据；对口径、时间或范围不同的内容分别说明。\n材料：[按编号粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428958,
+      "useCount": 0
+    },
+    {
+      "id": "9933d8a3-f123-5dbc-a0b3-b6445dc9cdf9",
+      "title": "提取规则和义务",
+      "categoryId": "reading",
+      "tags": [
+        "规则",
+        "条件",
+        "期限"
+      ],
+      "variants": [
+        {
+          "id": "9933d8a3-f123-5dbc-a0b3-b6445dc9cdf9-default",
+          "name": "默认",
+          "content": "从以下规则或协议中提取适用对象、前置条件、必须做的事、禁止事项、期限和例外，附条款位置。只依据原文，不补充法律结论；模糊或相互冲突的条款列为待确认。\n文本：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428957,
+      "useCount": 0
+    },
+    {
+      "id": "e6a22c10-1e66-55e9-af5c-e18c1a3e9dba",
+      "title": "解释陌生概念",
+      "categoryId": "learning",
+      "tags": [
+        "概念",
+        "类比",
+        "理解"
+      ],
+      "variants": [
+        {
+          "id": "e6a22c10-1e66-55e9-af5c-e18c1a3e9dba-default",
+          "name": "默认",
+          "content": "面向我的现有水平解释以下概念：先给准确的简短定义，再用一个贴近日常的例子说明，指出类比的局限和常见误解，最后给两道检查理解的小题及答案。避免术语堆砌。\n概念与我的水平：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428950,
+      "useCount": 0
+    },
+    {
+      "id": "38052e7b-91e7-51c4-940a-c44bd35a6f25",
+      "title": "制定学习路径",
+      "categoryId": "learning",
+      "tags": [
+        "学习计划",
+        "阶段",
+        "练习"
+      ],
+      "variants": [
+        {
+          "id": "38052e7b-91e7-51c4-940a-c44bd35a6f25-default",
+          "name": "默认",
+          "content": "根据目标、基础和可用时间制定学习路径。按先后依赖安排阶段，每阶段给出重点、练习和可判断是否掌握的标准，优先覆盖必需知识；资源用类型描述，具体链接必须核实。\n目标、基础、时间：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428949,
+      "useCount": 0
+    },
+    {
+      "id": "79d23c11-7ca9-5dcf-804b-8715c0303b38",
+      "title": "出题检验掌握",
+      "categoryId": "learning",
+      "tags": [
+        "测验",
+        "难度",
+        "解析"
+      ],
+      "variants": [
+        {
+          "id": "79d23c11-7ca9-5dcf-804b-8715c0303b38-default",
+          "name": "默认",
+          "content": "围绕以下知识范围生成一组自编练习，覆盖理解、应用与常见错误，难度逐步增加。题目先集中输出，答案与解析另列，确保条件完整且答案可验证；不要宣称是官方真题。\n知识范围、题数、水平：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428948,
+      "useCount": 0
+    },
+    {
+      "id": "fd0f828e-6fb4-5f6b-ab7b-127db0490f02",
+      "title": "分析错题原因",
+      "categoryId": "learning",
+      "tags": [
+        "错题",
+        "推理",
+        "纠正"
+      ],
+      "variants": [
+        {
+          "id": "fd0f828e-6fb4-5f6b-ab7b-127db0490f02-default",
+          "name": "默认",
+          "content": "分析以下题目和我的作答，定位最早出现的错误，区分概念、计算与审题问题。给出正确推理和一条改进建议，再出一道结构相似但数据不同的练习，附答案；不要只报最终结果。\n题目、作答与参考答案：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428947,
+      "useCount": 0
+    },
+    {
+      "id": "2aa282c5-e40a-5127-924d-6bc2302a23a1",
+      "title": "查证具体说法",
+      "categoryId": "research",
+      "tags": [
+        "查证",
+        "来源",
+        "时效"
+      ],
+      "variants": [
+        {
+          "id": "2aa282c5-e40a-5127-924d-6bc2302a23a1-default",
+          "name": "默认",
+          "content": "查证以下说法是否成立。优先查找一手来源，注明发布日期、适用范围和直接链接，区分支持、反证与未知；不要把搜索摘要当作证据。无法联网时明确说明，列出需要查证的内容。\n说法：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428940,
+      "useCount": 0
+    },
+    {
+      "id": "c3d8f72e-fe9f-51a9-a470-a94200dd648f",
+      "title": "调研陌生领域",
+      "categoryId": "research",
+      "tags": [
+        "调研",
+        "概览",
+        "资料"
+      ],
+      "variants": [
+        {
+          "id": "c3d8f72e-fe9f-51a9-a470-a94200dd648f-default",
+          "name": "默认",
+          "content": "围绕以下问题开展入门调研，整理基本概念、主要参与者、常见做法、争议与仍未知的问题。优先使用官方资料或原始研究，给出可核查链接和日期；控制范围，避免无关历史。\n问题、范围与用途：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428939,
+      "useCount": 0
+    },
+    {
+      "id": "d6020b61-0683-5bff-a24b-67fff3473fe7",
+      "title": "整理近期变化",
+      "categoryId": "research",
+      "tags": [
+        "动态",
+        "时间线",
+        "影响"
+      ],
+      "variants": [
+        {
+          "id": "d6020b61-0683-5bff-a24b-67fff3473fe7-default",
+          "name": "默认",
+          "content": "查询以下主题在指定时间范围内的重要变化，按发生时间整理事件、原始来源和实际影响，区分发布日期与事件日期。重复报道合并，传闻单独标注；无法联网时不要编造动态。\n主题与时间范围：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428938,
+      "useCount": 0
+    },
+    {
+      "id": "9f9dfbdd-f977-530f-8ac0-96d83191c0c0",
+      "title": "寻找可用资源",
+      "categoryId": "research",
+      "tags": [
+        "检索",
+        "筛选",
+        "资源"
+      ],
+      "variants": [
+        {
+          "id": "9f9dfbdd-f977-530f-8ac0-96d83191c0c0-default",
+          "name": "默认",
+          "content": "为以下需求寻找可直接使用的资料或工具，按硬性条件筛选，只保留少量匹配项。逐项列出用途、访问链接、费用或许可、限制及核查日期；信息缺失标为未知，不仅依据宣传推荐。\n需求与硬性条件：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428937,
+      "useCount": 0
+    },
+    {
+      "id": "9a9daf86-2745-53ae-b6b2-df61da530ffd",
+      "title": "撰写工作汇报",
+      "categoryId": "office",
+      "tags": [
+        "汇报",
+        "成果",
+        "阻碍"
+      ],
+      "variants": [
+        {
+          "id": "9a9daf86-2745-53ae-b6b2-df61da530ffd-default",
+          "name": "默认",
+          "content": "根据以下工作事实写一份简洁汇报，包含已完成成果、与目标的差距、阻碍和下一步。用具体结果代替空泛表态，数字只取自材料，未完成事项如实说明。\n受众与周期：[填写]\n工作事实：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428930,
+      "useCount": 0
+    },
+    {
+      "id": "d339a90a-37a8-5f39-9eb3-bd10e494e737",
+      "title": "编写操作流程",
+      "categoryId": "office",
+      "tags": [
+        "流程",
+        "步骤",
+        "检查点"
+      ],
+      "variants": [
+        {
+          "id": "d339a90a-37a8-5f39-9eb3-bd10e494e737-default",
+          "name": "默认",
+          "content": "将以下做法整理成可执行的操作流程，写明适用范围、准备条件、顺序步骤、检查点与异常处理。每步说明动作和完成标准，不省略必要前提，不猜测缺失操作。\n流程用途与现有做法：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428929,
+      "useCount": 0
+    },
+    {
+      "id": "ded550c1-aa22-58eb-a40d-e412811c36de",
+      "title": "起草项目提案",
+      "categoryId": "office",
+      "tags": [
+        "提案",
+        "资源",
+        "审批"
+      ],
+      "variants": [
+        {
+          "id": "ded550c1-aa22-58eb-a40d-e412811c36de-default",
+          "name": "默认",
+          "content": "根据以下材料起草项目提案，说明要解决的问题、目标、实施范围、关键安排、所需资源、风险和验收方式。区分事实与估算，未提供预算或时间时标为待确认，便于审批者做决定。\n项目材料与审批对象：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428928,
+      "useCount": 0
+    },
+    {
+      "id": "a4110865-56f6-5d1f-b0bc-d218f49c16b1",
+      "title": "编写岗位简历",
+      "categoryId": "office",
+      "tags": [
+        "简历",
+        "经历",
+        "匹配"
+      ],
+      "variants": [
+        {
+          "id": "a4110865-56f6-5d1f-b0bc-d218f49c16b1-default",
+          "name": "默认",
+          "content": "根据真实经历和岗位要求改写简历要点，突出相关职责、做法和成果。使用清楚的行动句，不编造经验、指标或资格；缺少可量化证据时保留具体事实。列出岗位匹配缺口，不夸大胜任程度。\n岗位要求与经历：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428927,
+      "useCount": 0
+    },
+    {
+      "id": "9b636c1b-c73a-5ed0-a178-9c106e1a6e47",
+      "title": "起草工作邮件",
+      "categoryId": "communication",
+      "tags": [
+        "邮件",
+        "诉求",
+        "礼貌"
+      ],
+      "variants": [
+        {
+          "id": "9b636c1b-c73a-5ed0-a178-9c106e1a6e47-default",
+          "name": "默认",
+          "content": "根据以下情况起草一封工作邮件，明确目的、必要背景、希望对方采取的动作及期限。语气符合双方关系，简洁礼貌；不擅自承诺未授权事项。输出主题与正文。\n收件人关系、情况、诉求与期限：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428920,
+      "useCount": 0
+    },
+    {
+      "id": "07bd4042-483c-5f0d-ad3d-d7067368f1c5",
+      "title": "表达拒绝与边界",
+      "categoryId": "communication",
+      "tags": [
+        "拒绝",
+        "边界",
+        "措辞"
+      ],
+      "variants": [
+        {
+          "id": "07bd4042-483c-5f0d-ad3d-d7067368f1c5-default",
+          "name": "默认",
+          "content": "为以下情况写一段可直接发送的拒绝回复。明确无法接受的事项和可接受范围，理由简短，不指责、不含糊承诺；确有替代方案时提供，没有则不硬凑。\n关系、情况与底线：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428919,
+      "useCount": 0
+    },
+    {
+      "id": "5a15be68-2d9a-5a95-aa1e-42aa18fcc642",
+      "title": "反馈具体问题",
+      "categoryId": "communication",
+      "tags": [
+        "反馈",
+        "事实",
+        "改进"
+      ],
+      "variants": [
+        {
+          "id": "5a15be68-2d9a-5a95-aa1e-42aa18fcc642-default",
+          "name": "默认",
+          "content": "将以下情况写成一次建设性反馈：先描述可观察事实，再说明影响、期望和具体改进动作。避免推测动机或评价人格，区分已知事实与我的感受，语气直接且尊重。\n对象、事实与期望：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428918,
+      "useCount": 0
+    },
+    {
+      "id": "500f90aa-b401-523e-b185-97af42f4bb4e",
+      "title": "准备协商方案",
+      "categoryId": "communication",
+      "tags": [
+        "谈判",
+        "底线",
+        "让步"
+      ],
+      "variants": [
+        {
+          "id": "500f90aa-b401-523e-b185-97af42f4bb4e-default",
+          "name": "默认",
+          "content": "为以下协商准备开场表达、核心理由、可能异议及回应。列出目标、底线、可交换条件与退出条件，不编造筹码，不承诺超出权限的事情；建议应符合双方现实约束。\n事项、双方诉求与可让步范围：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428917,
+      "useCount": 0
+    },
+    {
+      "id": "aed699db-df0f-568d-8d18-c2dfdb042008",
+      "title": "拆解可执行任务",
+      "categoryId": "planning",
+      "tags": [
+        "拆解",
+        "依赖",
+        "验收"
+      ],
+      "variants": [
+        {
+          "id": "aed699db-df0f-568d-8d18-c2dfdb042008-default",
+          "name": "默认",
+          "content": "将以下目标拆成可执行任务，按依赖排序。每项写明交付物、完成标准、前置条件与粗略耗时，区分估算和确定信息；避免把一个动作拆成无意义小步骤。\n目标、期限与资源：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428910,
+      "useCount": 0
+    },
+    {
+      "id": "3fafd045-a601-5f95-9785-b868fa6c895e",
+      "title": "安排一周工作",
+      "categoryId": "planning",
+      "tags": [
+        "排期",
+        "时间块",
+        "优先级"
+      ],
+      "variants": [
+        {
+          "id": "3fafd045-a601-5f95-9785-b868fa6c895e-default",
+          "name": "默认",
+          "content": "根据以下任务、固定安排和可用时段制定一周计划。优先处理有期限和高影响任务，保留缓冲，标出无法容纳的事项；不要重叠安排或假设额外工作时间。\n任务、期限、固定安排与可用时段：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428909,
+      "useCount": 0
+    },
+    {
+      "id": "244d9ace-3255-5cf1-9884-a7fa20a7521f",
+      "title": "排查计划风险",
+      "categoryId": "planning",
+      "tags": [
+        "风险",
+        "预案",
+        "触发点"
+      ],
+      "variants": [
+        {
+          "id": "244d9ace-3255-5cf1-9884-a7fa20a7521f-default",
+          "name": "默认",
+          "content": "检查以下实施计划的依赖、资源冲突、易延误环节和失败后果。只列与实际条件相关的风险，给出预防动作、预警信号和备用方案，按影响与发生可能性排序。\n计划与已知限制：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428908,
+      "useCount": 0
+    },
+    {
+      "id": "06d64974-8e01-5488-a1b3-3a45129a5042",
+      "title": "复盘已完成项目",
+      "categoryId": "planning",
+      "tags": [
+        "复盘",
+        "偏差",
+        "改进"
+      ],
+      "variants": [
+        {
+          "id": "06d64974-8e01-5488-a1b3-3a45129a5042-default",
+          "name": "默认",
+          "content": "根据以下项目记录比较目标与实际结果，分析偏差、有效做法和问题原因。区分证据支持的原因与假设，最后提出少量具体改进动作及验证方式；避免事后归咎个人。\n目标、结果与过程记录：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428907,
+      "useCount": 0
+    },
+    {
+      "id": "d5d0cfd5-c946-580c-accd-bd4400e50542",
+      "title": "比较候选方案",
+      "categoryId": "decisions",
+      "tags": [
+        "比较",
+        "权衡",
+        "选择"
+      ],
+      "variants": [
+        {
+          "id": "d5d0cfd5-c946-580c-accd-bd4400e50542-default",
+          "name": "默认",
+          "content": "比较以下候选方案，先检查硬性条件，再按我的重点评估收益、代价和风险。用表格列出有依据的差异，未知项标为待查；给出条件化建议，说明什么情况会改变选择。\n需求、候选方案与优先级：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428900,
+      "useCount": 0
+    },
+    {
+      "id": "733689a4-0758-5546-9507-1d7d231f17c7",
+      "title": "评估购买必要性",
+      "categoryId": "decisions",
+      "tags": [
+        "购买",
+        "预算",
+        "替代"
+      ],
+      "variants": [
+        {
+          "id": "733689a4-0758-5546-9507-1d7d231f17c7-default",
+          "name": "默认",
+          "content": "根据我的用途、现有替代品和预算，评估是否需要购买以下产品。比较不买、低成本替代和购买的实际差异，计算成本时写明假设；型号、价格与售后信息需实时核查，不默认推荐贵款。\n产品、用途、已有物品与预算：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428899,
+      "useCount": 0
+    },
+    {
+      "id": "f2cd1736-9ef3-57aa-ba86-e3ca59f0b85e",
+      "title": "检验决策假设",
+      "categoryId": "decisions",
+      "tags": [
+        "假设",
+        "反证",
+        "试验"
+      ],
+      "variants": [
+        {
+          "id": "f2cd1736-9ef3-57aa-ba86-e3ca59f0b85e-default",
+          "name": "默认",
+          "content": "审视以下决定背后的关键假设，指出哪些已有证据、哪些只是推测。寻找可能推翻结论的事实，设计低成本验证方法，并写明继续、调整或放弃的判断条件。\n决定、理由与现有证据：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428898,
+      "useCount": 0
+    },
+    {
+      "id": "324cae5f-56b9-5c7c-82f1-188f8aa77718",
+      "title": "权衡个人安排",
+      "categoryId": "decisions",
+      "tags": [
+        "取舍",
+        "生活",
+        "约束"
+      ],
+      "variants": [
+        {
+          "id": "324cae5f-56b9-5c7c-82f1-188f8aa77718-default",
+          "name": "默认",
+          "content": "帮助我比较以下生活或职业安排，结合时间、费用、精力和我明确表达的偏好。区分可逆与难以撤回的选择，指出缺失信息和代价；给出可先尝试的小步骤，不替我设定价值观。\n选项、约束与偏好：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428897,
+      "useCount": 0
+    },
+    {
+      "id": "5ea467c1-4e30-5c6e-a7be-27b9232e8ca2",
+      "title": "整理功能需求",
+      "categoryId": "product",
+      "tags": [
+        "需求",
+        "范围",
+        "验收"
+      ],
+      "variants": [
+        {
+          "id": "5ea467c1-4e30-5c6e-a7be-27b9232e8ca2-default",
+          "name": "默认",
+          "content": "将以下想法整理成清晰的功能需求，写明目标用户、待解决问题、使用流程、范围内外和验收条件。区分明确要求、假设与待确认项，不凭空增加功能或提前指定技术方案。\n想法与限制：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428890,
+      "useCount": 0
+    },
+    {
+      "id": "e4279998-69f7-5648-a96b-83b1a865d042",
+      "title": "梳理用户流程",
+      "categoryId": "product",
+      "tags": [
+        "用户流程",
+        "状态",
+        "恢复"
+      ],
+      "variants": [
+        {
+          "id": "e4279998-69f7-5648-a96b-83b1a865d042-default",
+          "name": "默认",
+          "content": "根据以下产品场景梳理用户从入口到完成目标的步骤，列出每步输入、反馈和退出方式。补齐加载、空数据、失败、重试及恢复路径，指出流程断点，避免增加无依据的页面。\n场景与已有功能：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428889,
+      "useCount": 0
+    },
+    {
+      "id": "d1d6b208-344f-535d-a212-1215019b2346",
+      "title": "撰写界面提示",
+      "categoryId": "product",
+      "tags": [
+        "微文案",
+        "操作",
+        "错误"
+      ],
+      "variants": [
+        {
+          "id": "d1d6b208-344f-535d-a212-1215019b2346-default",
+          "name": "默认",
+          "content": "为以下界面状态编写简短文案，包括标题、说明和必要的按钮文字。明确发生了什么、用户能做什么，避免责怪用户和含糊的“异常”；删除确认要说明实际后果，不夸大可恢复性。\n界面状态、用户动作与真实行为：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428888,
+      "useCount": 0
+    },
+    {
+      "id": "4b9b09bf-b5a9-5dcb-aeaa-f2bbb80745ed",
+      "title": "归纳用户反馈",
+      "categoryId": "product",
+      "tags": [
+        "用户反馈",
+        "归因",
+        "排序"
+      ],
+      "variants": [
+        {
+          "id": "4b9b09bf-b5a9-5dcb-aeaa-f2bbb80745ed-default",
+          "name": "默认",
+          "content": "整理以下用户反馈，按实际问题聚类，保留原始反馈编号，区分症状、需求与建议方案。结合频率、影响和已有证据排序，列出需进一步验证的假设；不要把少数意见当成所有用户需求。\n反馈与产品背景：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428887,
+      "useCount": 0
+    },
+    {
+      "id": "09cce774-a1bf-50f0-952c-26e35b3b8baa",
+      "title": "实现明确功能",
+      "categoryId": "coding",
+      "tags": [
+        "实现",
+        "兼容",
+        "验证"
+      ],
+      "variants": [
+        {
+          "id": "09cce774-a1bf-50f0-952c-26e35b3b8baa-default",
+          "name": "默认",
+          "content": "在现有项目中实现以下功能。先读取相关代码和约定，再做满足需求的最小改动，保持现有接口及无关行为兼容，保留他人改动。运行相关验证，最后说明变更、结果和未验证边界。\n功能与验收要求：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428880,
+      "useCount": 0
+    },
+    {
+      "id": "e3737a2e-3e34-5c96-87d0-89df11138a5f",
+      "title": "定位并修复故障",
+      "categoryId": "coding",
+      "tags": [
+        "调试",
+        "复现",
+        "修复"
+      ],
+      "variants": [
+        {
+          "id": "e3737a2e-3e34-5c96-87d0-89df11138a5f-default",
+          "name": "默认",
+          "content": "根据以下现象、日志和代码定位故障，先确认复现路径和根因，再做最小修复。区分证据与猜测，避免通过吞掉异常掩盖问题；补充能捕获该错误的回归验证。\n现象、复现步骤与日志：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428879,
+      "useCount": 0
+    },
+    {
+      "id": "9a2454e6-1fbb-5cc1-aa54-ab2cc4437cae",
+      "title": "重构指定模块",
+      "categoryId": "coding",
+      "tags": [
+        "重构",
+        "行为保真",
+        "范围"
+      ],
+      "variants": [
+        {
+          "id": "9a2454e6-1fbb-5cc1-aa54-ab2cc4437cae-default",
+          "name": "默认",
+          "content": "重构以下指定模块，目标是降低重复和复杂度。先确认公开接口、调用方与现有行为，在范围内渐进修改，保留兼容性；不顺带替换架构或增加功能。用相关测试验证行为未变。\n模块路径、目标与边界：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428878,
+      "useCount": 0
+    },
+    {
+      "id": "e75684ca-3df1-5ffc-84ba-52263720f08a",
+      "title": "设计有效测试",
+      "categoryId": "coding",
+      "tags": [
+        "测试",
+        "边界",
+        "失败路径"
+      ],
+      "variants": [
+        {
+          "id": "e75684ca-3df1-5ffc-84ba-52263720f08a-default",
+          "name": "默认",
+          "content": "为以下功能补充有价值的测试，先确认真实接口与测试工具。覆盖核心行为、边界和失败路径，避免只镜像实现或过度 mock；测试应能在行为错误时失败。运行测试并报告结果。\n功能、路径与重点风险：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428877,
+      "useCount": 0
+    },
+    {
+      "id": "9267bb08-a5b4-57ae-b9e1-b56ddc73064f",
+      "title": "清洗表格数据",
+      "categoryId": "data",
+      "tags": [
+        "清洗",
+        "缺失",
+        "重复"
+      ],
+      "variants": [
+        {
+          "id": "9267bb08-a5b4-57ae-b9e1-b56ddc73064f-default",
+          "name": "默认",
+          "content": "检查以下表格的数据类型、缺失值、重复记录和格式不一致，先给出清洗规则，再输出清洗结果与变更记录。保留原始标识，不猜填缺失事实；去重依据不明时标为待确认。\n数据与字段说明：[粘贴或附文件]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428870,
+      "useCount": 0
+    },
+    {
+      "id": "20065081-50b8-58fe-b1db-96b7c1e9c769",
+      "title": "分析数据变化",
+      "categoryId": "data",
+      "tags": [
+        "分析",
+        "趋势",
+        "口径"
+      ],
+      "variants": [
+        {
+          "id": "20065081-50b8-58fe-b1db-96b7c1e9c769-default",
+          "name": "默认",
+          "content": "分析以下数据的趋势、异常和分组差异，先核对指标口径、时间范围与缺失情况。写出计算依据，区分相关性与因果；样本不足时说明限制，不把波动直接解释为业务结论。\n数据、字段与分析问题：[粘贴或附文件]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428869,
+      "useCount": 0
+    },
+    {
+      "id": "ba78e90e-7630-5131-baad-7815e8d2c999",
+      "title": "编写表格公式",
+      "categoryId": "data",
+      "tags": [
+        "公式",
+        "表格",
+        "边界"
+      ],
+      "variants": [
+        {
+          "id": "ba78e90e-7630-5131-baad-7815e8d2c999-default",
+          "name": "默认",
+          "content": "为以下表格需求编写可直接使用的公式，按指定软件和版本处理。说明放在哪个单元格及如何填充，并用示例核对空值、错误值、重复值和范围边界；不要使用该版本不支持的函数。\n软件版本、列结构与目标：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428868,
+      "useCount": 0
+    },
+    {
+      "id": "259778d5-5392-5c1d-964e-e6d51d4fd24c",
+      "title": "转换结构化格式",
+      "categoryId": "data",
+      "tags": [
+        "转换",
+        "JSON",
+        "校验"
+      ],
+      "variants": [
+        {
+          "id": "259778d5-5392-5c1d-964e-e6d51d4fd24c-default",
+          "name": "默认",
+          "content": "把以下内容转换为指定数据结构。严格遵守字段名、类型和输出格式，不添加未知信息，缺失值按指定规则处理；保持记录顺序，无法可靠识别的项目单独列出。\n目标结构及缺失规则：[填写]\n原始内容：[粘贴]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428867,
+      "useCount": 0
+    },
+    {
+      "id": "f6f4b0d9-2e0f-5dc0-b10c-935d44af9d04",
+      "title": "构思故事情节",
+      "categoryId": "creative",
+      "tags": [
+        "故事",
+        "冲突",
+        "因果"
+      ],
+      "variants": [
+        {
+          "id": "f6f4b0d9-2e0f-5dc0-b10c-935d44af9d04-default",
+          "name": "默认",
+          "content": "根据以下设定提出三个方向不同的故事方案，分别写出主角目标、核心阻碍、关键转折和结局。情节变化必须有因果，遵守设定和禁用元素；避免只换人物名字或背景。\n设定、风格与限制：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428860,
+      "useCount": 0
+    },
+    {
+      "id": "0b1a6b62-9a3e-5f96-9393-258886e6c318",
+      "title": "策划内容选题",
+      "categoryId": "creative",
+      "tags": [
+        "选题",
+        "受众",
+        "角度"
+      ],
+      "variants": [
+        {
+          "id": "0b1a6b62-9a3e-5f96-9393-258886e6c318-default",
+          "name": "默认",
+          "content": "围绕以下主题和受众提出五个差异明确的内容选题，每个写明切入角度、读者收益和可使用的素材。避免标题党、重复话题及无资料支撑的热点，指出需要补充的事实。\n主题、受众、渠道与已有素材：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428859,
+      "useCount": 0
+    },
+    {
+      "id": "900af7b9-a34e-56e7-9b7a-ed27cb813b6c",
+      "title": "生成命名方案",
+      "categoryId": "creative",
+      "tags": [
+        "命名",
+        "辨识度",
+        "风格"
+      ],
+      "variants": [
+        {
+          "id": "900af7b9-a34e-56e7-9b7a-ed27cb813b6c-default",
+          "name": "默认",
+          "content": "为以下产品或活动提出八个风格不同但符合定位的名称，说明读音、含义与可能歧义。避免难读、生僻和空泛拼词；不要声称商标、域名或账号可用，另列需要核查的项目。\n对象、受众、风格与禁用词：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428858,
+      "useCount": 0
+    },
+    {
+      "id": "0fdd80f7-d046-5130-8b45-09605f1a358d",
+      "title": "编写视觉创作说明",
+      "categoryId": "creative",
+      "tags": [
+        "视觉",
+        "构图",
+        "画面"
+      ],
+      "variants": [
+        {
+          "id": "0fdd80f7-d046-5130-8b45-09605f1a358d-default",
+          "name": "默认",
+          "content": "将以下想法整理成可用于图像创作的描述，明确主体、动作、环境、构图、光线、色彩和风格。只加入服务于主题的细节，说明必须保留及排除的元素；画面文字按提供内容写，不编造标识。\n想法、用途、比例与限制：[填写]"
+        }
+      ],
+      "favorite": false,
+      "createdAt": 1790748429000,
+      "updatedAt": 1790748428857,
+      "useCount": 0
+    }
+  ]
+};
+
+let state = {categories:[],prompts:[]};
+let currentCategory = 'all';
+let currentPromptId = null;
+let temporaryPrompt = null;
+let activeVariantId = null;
+let editMode = false;
+let favoriteOnly = false;
+let sortMode = 'updatedAt';
+let currentPage = 1;
+let listQueryKey = '';
+const PAGE_SIZE = 20;
+let newPromptBaseline = null;
+
+const els = {
+  editCategoryBtn:document.getElementById('editCategoryBtn'),
+  addCategoryBtn:document.getElementById('addCategoryBtn'),
+  categoryList:document.getElementById('categoryList'),
+  pageTitle:document.getElementById('pageTitle'),
+  pageSubtitle:document.getElementById('pageSubtitle'),
+  promptGrid:document.getElementById('promptGrid'),
+  promptPager:document.getElementById('promptPager'),
+  searchInput:document.getElementById('searchInput'),
+  detailOverlay:document.getElementById('detailOverlay'),
+  titleInput:document.getElementById('titleInput'),
+  categorySelect:document.getElementById('categorySelect'),
+  promptEditor:document.getElementById('promptEditor'),
+  variantTabs:document.getElementById('variantTabs'),
+  addVariantBtn:document.getElementById('addVariantBtn'),
+  editModeBtn:document.getElementById('editModeBtn'),
+  saveBtn:document.getElementById('saveBtn'),
+  deleteBtn:document.getElementById('deleteBtn'),
+  restoreBtn:document.getElementById('restoreBtn'),
+  copyBtn:document.getElementById('copyBtn'),
+  toast:document.getElementById('statusToast'),
+  appDialogOverlay:document.getElementById('appDialogOverlay'),
+  appDialogTitle:document.getElementById('appDialogTitle'),
+  appDialogMessage:document.getElementById('appDialogMessage'),
+  appDialogInput:document.getElementById('appDialogInput'),
+  appDialogCancel:document.getElementById('appDialogCancel'),
+  appDialogConfirm:document.getElementById('appDialogConfirm')
+};
+
+let draggedCatId = null;
+const DRAG_ICON = `<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="4" r="1.2" fill="currentColor"/><circle cx="10.5" cy="4" r="1.2" fill="currentColor"/><circle cx="5.5" cy="8" r="1.2" fill="currentColor"/><circle cx="10.5" cy="8" r="1.2" fill="currentColor"/><circle cx="5.5" cy="12" r="1.2" fill="currentColor"/><circle cx="10.5" cy="12" r="1.2" fill="currentColor"/></svg>`;
+
+function makeId(){
+  return crypto.randomUUID ? crypto.randomUUID() : 'id_'+Date.now()+'_'+Math.random().toString(16).slice(2);
+}
+function normalizePrompt(p){
+  const prompt={...p};
+  prompt.id = String(prompt.id || makeId()).trim() || makeId();
+  prompt.title = String(prompt.title || '未命名提示词').trim() || '未命名提示词';
+  prompt.categoryId = String(prompt.categoryId || '');
+  prompt.favorite = !!prompt.favorite;
+  prompt.useCount = Number(prompt.useCount) || 0;
+  prompt.createdAt = Number(prompt.createdAt) || Date.now();
+  prompt.updatedAt = Number(prompt.updatedAt) || Date.now();
+  if(!Array.isArray(prompt.variants) || !prompt.variants.length){
+    prompt.variants=[{
+      id:makeId(),
+      name:'默认',
+      content:typeof prompt.content==='string'?prompt.content:''
+    }];
+  }
+  prompt.variants=prompt.variants.map((v,i)=>({
+    id:String(v.id || makeId()).trim() || makeId(),
+    name:String(v.name || `提示词 ${i+1}`).trim() || `提示词 ${i+1}`,
+    content:typeof v.content==='string'?v.content:''
+  }));
+  delete prompt.content;
+  prompt.tags=Array.isArray(prompt.tags)
+    ? [...new Set(prompt.tags.filter(t=>typeof t==='string').map(t=>t.trim()).filter(Boolean))]
+    : [];
+  delete prompt.description;
+  return prompt;
+}
+function normalizeCategory(c, index){
+  const id=String(c?.id || ('cat_' + index)).trim() || ('cat_' + index);
+  return {
+    id,
+    name: String(c?.name || '未命名分类').trim() || '未命名分类',
+    system: id==='all' ? true : !!c?.system
+  };
+}
+function ensureAllCategory(categories){
+  const all=categories.find(c=>c.id==='all');
+  if(all){
+    all.system=true;
+    if(!String(all.name||'').trim()) all.name='全部';
+    return categories;
+  }
+  categories.unshift({id:'all',name:'全部',system:true});
+  return categories;
+}
+function normalizeState(data){
+  const rawCats = Array.isArray(data?.categories) && data.categories.length ? data.categories : structuredClone(seedData.categories);
+  return {
+    categories: ensureAllCategory(rawCats.map(normalizeCategory)),
+    prompts: Array.isArray(data?.prompts) ? data.prompts.map(normalizePrompt) : []
+  };
+}
+function validateLibrary(data){
+  const seen=new Set();
+  for(const cat of data?.categories||[]){
+    const id=String(cat?.id||'').trim();
+    if(!id||id!==String(cat.id)) return '存在空的分类编号，已停止保存';
+    if(seen.has('c:'+id)) return '分类编号重复，已停止保存';
+    seen.add('c:'+id);
+  }
+  for(const prompt of data?.prompts||[]){
+    const id=String(prompt?.id||'').trim();
+    if(!id||id!==String(prompt.id)) return '存在空的提示词编号，已停止保存';
+    if(seen.has('p:'+id)) return '提示词编号重复，已停止保存';
+    seen.add('p:'+id);
+    for(const variant of prompt.variants||[]){
+      const vid=String(variant?.id||'').trim();
+      if(!vid||vid!==String(variant.id)) return '存在空的场景编号，已停止保存';
+      if(seen.has('v:'+vid)) return '场景编号重复，已停止保存';
+      seen.add('v:'+vid);
+    }
+  }
+  return '';
+}
+function normalizeImport(data){
+  if(!data||typeof data!=='object'||Array.isArray(data)){
+    return {error:'所选文件不是提示词库备份。'};
+  }
+  const hasCats=Array.isArray(data.categories);
+  const hasPrompts=Array.isArray(data.prompts);
+  if(!hasCats&&!hasPrompts) return {error:'未在文件中检测到提示词或分类。'};
+  const categories=ensureAllCategory((hasCats?data.categories:[]).map(normalizeCategory));
+  const prompts=(hasPrompts?data.prompts:[]).map(normalizePrompt);
+  const realCats=categories.filter(c=>c.id!=='all');
+  if(!prompts.length&&!realCats.length) return {error:'文件里没有可导入的提示词或分类。'};
+  const problem=validateLibrary({categories,prompts});
+  if(problem) return {error:problem};
+  return {categories,prompts,keepCategories:!hasCats};
+}
+function debounce(fn, delay = 150){
+  let t;
+  return function(...args){
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+function isDesktop(){
+  return !!(window.__TAURI__?.core?.invoke || window.__TAURI_INTERNALS__?.invoke);
+}
+function invoke(cmd,args){
+  const fn=window.__TAURI__?.core?.invoke || window.__TAURI_INTERNALS__?.invoke;
+  return fn(cmd,args||{});
+}
+function readStoredLibrary(){
+  let readError=null;
+  for(const key of [STORAGE_KEY,'prompt_library_v6','prompt_library_v5','prompt_library_v4','prompt_library_v3','prompt_library_v1']){
+    try{
+      const raw=localStorage.getItem(key);
+      if(raw===null) continue;
+      const parsed=JSON.parse(raw);
+      if(!parsed||typeof parsed!=='object'||Array.isArray(parsed)
+        ||!Array.isArray(parsed.categories)||!Array.isArray(parsed.prompts)){
+        throw new Error('提示词库格式无效');
+      }
+      const loaded=normalizeState(parsed);
+      const problem=validateLibrary(loaded);
+      if(problem) throw new Error(problem);
+      // 读取与迁移不覆盖原始存储；用户下一次明确保存时再写入当前版本。
+      if(readError) showToast('当前数据读取失败，已读取旧版数据；原始存储已保留',4000);
+      return loaded;
+    }catch(e){
+      readError=e;
+    }
+  }
+  if(readError) throw readError;
+  return null;
+}
+function loadBrowserData(){
+  const stored=readStoredLibrary();
+  if(stored) return stored;
+  const fresh=structuredClone(seedData);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(fresh));
+  return fresh;
+}
+function libraryFromRemote(remote){
+  return {
+    categories:ensureAllCategory(Array.isArray(remote?.categories)?remote.categories.map(normalizeCategory):[]),
+    prompts:Array.isArray(remote?.prompts)?remote.prompts.map(normalizePrompt):[]
+  };
+}
+function remoteHasLibrary(remote){
+  return !!(remote?.seeded
+    || (Array.isArray(remote?.prompts)&&remote.prompts.length)
+    || (Array.isArray(remote?.categories)&&remote.categories.length));
+}
+async function loadData(){
+  if(!isDesktop()) return loadBrowserData();
+  const remote=await invoke('load_state');
+  if(remoteHasLibrary(remote)){
+    const loaded=libraryFromRemote(remote);
+    if(!remote.seeded){
+      try{ await invoke('save_state',{state:loaded}); }catch(e){}
+    }
+    return loaded;
+  }
+  const migrated=readStoredLibrary();
+  const fresh=migrated||structuredClone(seedData);
+  await invoke('save_state',{state:fresh});
+  return fresh;
+}
+let persistEnabled=true;
+let saveQueue=Promise.resolve();
+let isEditingCategories=false;
+let categorySnapshot=null;
+let categoryViewSnapshot='all';
+let detachedPromptCategories=new Map();
+let categoryEditDirty=false;
+function stateForSave(commitCategoryEdit){
+  const snapshot=structuredClone(state);
+  if(commitCategoryEdit||!isEditingCategories||!categorySnapshot) return snapshot;
+  snapshot.categories=structuredClone(categorySnapshot);
+  const valid=new Set(snapshot.categories.map(c=>c.id));
+  for(const prompt of snapshot.prompts){
+    if(detachedPromptCategories.has(prompt.id)) prompt.categoryId=detachedPromptCategories.get(prompt.id);
+    if(prompt.categoryId&&!valid.has(prompt.categoryId)) prompt.categoryId='';
+  }
+  return snapshot;
+}
+function saveData(options){
+  if(!persistEnabled){
+    showToast('读取失败，未写入数据库');
+    return Promise.reject(new Error('persist disabled'));
+  }
+  const snapshot=stateForSave(!!options?.commitCategoryEdit);
+  const problem=validateLibrary(snapshot);
+  if(problem){
+    showToast(problem);
+    return Promise.reject(new Error(problem));
+  }
+  if(!isDesktop()){
+    try{
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(snapshot));
+      return Promise.resolve(true);
+    }catch(e){
+      showToast('保存失败');
+      return Promise.reject(e);
+    }
+  }
+  const job=saveQueue.then(()=>invoke('save_state',{state:snapshot}));
+  saveQueue=job.then(()=>{},()=>{});
+  return job.catch(err=>{
+    showToast('保存失败');
+    throw err;
+  });
+}
+function getCategory(id){
+  return state.categories.find(c=>c.id===id);
+}
+function getPrimaryContent(prompt){
+  return prompt?.variants?.[0]?.content || '';
+}
+function getAllContent(prompt){
+  return (prompt?.variants||[]).map(v=>`${v.name} ${v.content}`).join(' ');
+}
+function countUncategorized(){
+  return state.prompts.filter(p=>!p.categoryId || !state.categories.some(c=>c.id===p.categoryId)).length;
+}
+function countByCategory(id){
+  if(id==='all') return state.prompts.length;
+  if(id==='__uncategorized__') return countUncategorized();
+  return state.prompts.filter(p=>p.categoryId===id).length;
+}
+function escapeHtml(str=''){
+  return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function showToast(text, duration=1300){
+  els.toast.textContent=text;
+  els.toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t=setTimeout(()=>els.toast.classList.remove('show'),duration);
+}
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
+}
+
+let dialogResolver=null;
+function closeAppDialog(result){
+  els.appDialogOverlay.classList.remove('open');
+  els.appDialogOverlay.setAttribute('aria-hidden','true');
+  const resolve=dialogResolver;
+  dialogResolver=null;
+  if(resolve) resolve(result);
+}
+function askText(title,defaultValue='',message=''){
+  return new Promise(resolve=>{
+    dialogResolver=resolve;
+    els.appDialogTitle.textContent=title;
+    els.appDialogMessage.textContent=message;
+    els.appDialogMessage.hidden=!message;
+    els.appDialogInput.hidden=false;
+    els.appDialogInput.value=defaultValue;
+    els.appDialogConfirm.textContent='确定';
+    els.appDialogConfirm.className='dialog-btn primary';
+    els.appDialogOverlay.classList.add('open');
+    els.appDialogOverlay.setAttribute('aria-hidden','false');
+    setTimeout(()=>{els.appDialogInput.focus();els.appDialogInput.select();},0);
+  });
+}
+function askConfirm(title,message,confirmText='确定',danger=false){
+  return new Promise(resolve=>{
+    dialogResolver=resolve;
+    els.appDialogTitle.textContent=title;
+    els.appDialogMessage.textContent=message;
+    els.appDialogMessage.hidden=false;
+    els.appDialogInput.hidden=true;
+    els.appDialogConfirm.textContent=confirmText;
+    els.appDialogConfirm.className='dialog-btn '+(danger?'danger':'primary');
+    els.appDialogOverlay.classList.add('open');
+    els.appDialogOverlay.setAttribute('aria-hidden','false');
+    setTimeout(()=>els.appDialogConfirm.focus(),0);
+  });
+}
+els.appDialogCancel.onclick=()=>closeAppDialog(null);
+els.appDialogConfirm.onclick=()=>{
+  const hasInput=!els.appDialogInput.hidden;
+  closeAppDialog(hasInput?els.appDialogInput.value:true);
+};
+els.appDialogOverlay.addEventListener('mousedown',e=>{
+  if(e.target===els.appDialogOverlay) closeAppDialog(null);
+});
+els.appDialogInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();els.appDialogConfirm.click();}
+  if(e.key==='Escape'){e.preventDefault();els.appDialogCancel.click();}
+});
+
+function renderCategories(){
+  els.categoryList.innerHTML='';
+  state.categories.forEach(cat=>{
+    const btn=document.createElement('div');
+    btn.setAttribute('role','button');
+    btn.tabIndex=0;
+    btn.className='category-btn'+(currentCategory===cat.id?' active':'');
+
+    if(!isEditingCategories){
+      btn.innerHTML=`<span>${escapeHtml(cat.name)}</span><span class="cat-side"><span class="count">${countByCategory(cat.id)}</span></span>`;
+      btn.onclick=()=>{currentCategory=cat.id;renderAll();};
+      btn.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();btn.click();}};
+    }else{
+      btn.classList.add('is-editing-item');
+      if(cat.system||cat.id==='all'){
+        btn.innerHTML=`<span>${escapeHtml(cat.name)}</span><span class="cat-side"><span class="count">${countByCategory(cat.id)}</span></span>`;
+      }else{
+        btn.dataset.sortable='true';
+        btn.dataset.id=cat.id;
+        btn.innerHTML=`<span class="cat-name" title="点击重命名分类" style="cursor:pointer;flex:1;overflow:hidden;text-overflow:ellipsis">${escapeHtml(cat.name)}</span><span class="cat-side"><span class="cat-x" title="删除分类" role="button" tabindex="0" aria-label="删除分类 ${escapeHtml(cat.name)}">×</span><span class="cat-drag" title="按住上下拖拽排序" aria-label="拖拽排序">${DRAG_ICON}</span></span>`;
+
+        const nameHit=btn.querySelector('.cat-name');
+        if(nameHit){
+          nameHit.onclick=async(e)=>{
+            e.stopPropagation();
+            e.preventDefault();
+            const newName=await askText('修改分类名称',cat.name);
+            if(newName&&newName.trim()&&newName.trim()!==cat.name){
+              cat.name=newName.trim();
+              categoryEditDirty=true;
+              renderAll();
+              showToast('已修改分类名称');
+            }
+          };
+        }
+
+        const removeHit=btn.querySelector('.cat-x');
+        if(removeHit){
+          removeHit.onclick=(e)=>{
+            e.stopPropagation();
+            e.preventDefault();
+            deleteCategory(cat);
+          };
+          removeHit.onkeydown=(e)=>{
+            if(e.key==='Enter'||e.key===' '){
+              e.stopPropagation();
+              e.preventDefault();
+              deleteCategory(cat);
+            }
+          };
+        }
+
+        const dragHandle=btn.querySelector('.cat-drag');
+        if(dragHandle){
+          dragHandle.onpointerdown=(e)=>{
+            if(e.button!==0 && e.pointerType==='mouse') return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            const fromId=cat.id;
+            const startY=e.clientY;
+            let isDragging=false;
+            let currentDropTarget=null;
+            let currentIsBottom=false;
+
+            try{ dragHandle.setPointerCapture(e.pointerId); }catch(_){}
+
+            const onPointerMove=(moveEv)=>{
+              const dist=Math.abs(moveEv.clientY - startY);
+              if(!isDragging && dist < 3) return;
+
+              if(!isDragging){
+                isDragging=true;
+                btn.classList.add('is-dragging');
+                document.body.style.cursor='grabbing';
+              }
+
+              const listItems=Array.from(els.categoryList.querySelectorAll('.category-btn[data-sortable="true"]'));
+              listItems.forEach(el=>el.classList.remove('drag-over-top','drag-over-bottom'));
+
+              let found=null;
+              let isBottom=false;
+
+              for(const item of listItems){
+                const rect=item.getBoundingClientRect();
+                if(moveEv.clientY>=rect.top && moveEv.clientY<=rect.bottom){
+                  found=item;
+                  isBottom=moveEv.clientY > (rect.top + rect.height/2);
+                  break;
+                }
+              }
+
+              if(!found && listItems.length>0){
+                const firstRect=listItems[0].getBoundingClientRect();
+                const lastRect=listItems[listItems.length-1].getBoundingClientRect();
+                if(moveEv.clientY < firstRect.top){
+                  found=listItems[0];
+                  isBottom=false;
+                }else if(moveEv.clientY > lastRect.bottom){
+                  found=listItems[listItems.length-1];
+                  isBottom=true;
+                }
+              }
+
+              currentDropTarget=found;
+              currentIsBottom=isBottom;
+
+              if(found && found.dataset.id!==fromId){
+                found.classList.add(isBottom ? 'drag-over-bottom' : 'drag-over-top');
+              }
+            };
+
+            const onPointerUp=(upEv)=>{
+              dragHandle.removeEventListener('pointermove', onPointerMove);
+              dragHandle.removeEventListener('pointerup', onPointerUp);
+              dragHandle.removeEventListener('pointercancel', onPointerUp);
+              try{ dragHandle.releasePointerCapture(upEv.pointerId); }catch(_){}
+
+              document.body.style.cursor='';
+              btn.classList.remove('is-dragging');
+              document.querySelectorAll('.category-btn').forEach(el=>el.classList.remove('drag-over-top','drag-over-bottom'));
+
+              if(!isDragging || !currentDropTarget) return;
+
+              const targetId=currentDropTarget.dataset.id;
+              if(!targetId || targetId===fromId) return;
+
+              const fromIdx=state.categories.findIndex(c=>c.id===fromId);
+              let toIdx=state.categories.findIndex(c=>c.id===targetId);
+              if(fromIdx===-1 || toIdx===-1) return;
+
+              if(currentIsBottom){
+                toIdx=fromIdx<toIdx ? toIdx : toIdx+1;
+              }else{
+                toIdx=fromIdx<toIdx ? toIdx-1 : toIdx;
+              }
+              toIdx=Math.max(1, Math.min(state.categories.length-1, toIdx));
+
+              const [moved]=state.categories.splice(fromIdx,1);
+              state.categories.splice(toIdx,0,moved);
+              categoryEditDirty=true;
+              renderCategories();
+            };
+
+            dragHandle.addEventListener('pointermove', onPointerMove);
+            dragHandle.addEventListener('pointerup', onPointerUp);
+            dragHandle.addEventListener('pointercancel', onPointerUp);
+          };
+        }
+      }
+    }
+    els.categoryList.appendChild(btn);
+  });
+
+  const uncatCount=countUncategorized();
+  if(uncatCount>0){
+    const uncatBtn=document.createElement('div');
+    uncatBtn.setAttribute('role','button');
+    uncatBtn.tabIndex=0;
+    uncatBtn.className='category-btn'+(currentCategory==='__uncategorized__'?' active':'');
+    uncatBtn.innerHTML=`<span>未分类</span><span class="cat-side"><span class="count">${uncatCount}</span></span>`;
+    uncatBtn.onclick=()=>{currentCategory='__uncategorized__';renderAll();};
+    uncatBtn.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();uncatBtn.click();}};
+    els.categoryList.appendChild(uncatBtn);
+  }
+}
+function renderCategoryOptions(){
+  const cats=state.categories.filter(c=>c.id!=='all'&&c.id!=='__uncategorized__');
+  const selected=temporaryPrompt?.categoryId||'';
+  els.categorySelect.innerHTML=`<option value="">未分类</option>`+cats
+    .map(c=>`<option value="${escapeHtml(c.id)}"${c.id===selected?' selected':''}>${escapeHtml(c.name)}</option>`).join('');
+  els.categorySelect.value=selected;
+}
+async function deleteCategory(cat){
+  if(!cat||cat.system||cat.id==='all'||cat.id==='__uncategorized__') return;
+  const n=countByCategory(cat.id);
+  const message=n
+    ? `确定删除分类「${cat.name}」吗？\n其中 ${n} 条提示词会保留，并改为未分类。`
+    : `确定删除分类「${cat.name}」吗？`;
+  const ok=await askConfirm('删除分类',message,'删除',true);
+  if(!ok) return;
+  state.categories=state.categories.filter(c=>c.id!==cat.id);
+  state.prompts.forEach(p=>{
+    if(p.categoryId===cat.id){
+      if(!detachedPromptCategories.has(p.id)) detachedPromptCategories.set(p.id,p.categoryId);
+      p.categoryId='';
+    }
+  });
+  if(temporaryPrompt){
+    commitEditor();
+    temporaryPrompt.title=els.titleInput.value;
+    if(temporaryPrompt.categoryId===cat.id){
+      if(!detachedPromptCategories.has(temporaryPrompt.id)) detachedPromptCategories.set(temporaryPrompt.id,temporaryPrompt.categoryId);
+      temporaryPrompt.categoryId='';
+    }
+  }
+  if(currentCategory===cat.id) currentCategory='all';
+  categoryEditDirty=true;
+  renderAll();
+  if(temporaryPrompt) syncModal();
+  showToast('已删除分类');
+}
+function visibleQueryKey(){
+  return [currentCategory, favoriteOnly?'1':'0', sortMode, els.searchInput.value].join('\0');
+}
+function paginateItems(items, page, pageSize){
+  const size=pageSize>0?pageSize:20;
+  const pages=Math.max(1, Math.ceil(items.length/size));
+  const current=Math.min(Math.max(page||1, 1), pages);
+  const start=(current-1)*size;
+  return {page:current, pages, items:items.slice(start, start+size)};
+}
+function renderPager(total, page, pages){
+  if(!els.promptPager) return;
+  if(total<=PAGE_SIZE){
+    els.promptPager.hidden=true;
+    els.promptPager.replaceChildren();
+    return;
+  }
+  els.promptPager.hidden=false;
+  els.promptPager.replaceChildren();
+  const status=document.createElement('span');
+  status.className='pager-status';
+  const from=(page-1)*PAGE_SIZE+1;
+  const to=Math.min(page*PAGE_SIZE, total);
+  status.textContent=`${from}–${to} / ${total}`;
+  els.promptPager.appendChild(status);
+  const add=(label, target, opts={})=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='pager-btn'+(opts.current?' is-active':'');
+    btn.textContent=label;
+    if(opts.current) btn.setAttribute('aria-current','page');
+    if(opts.label) btn.setAttribute('aria-label', opts.label);
+    if(opts.disabled){
+      btn.disabled=true;
+    }else if(!opts.current){
+      btn.onclick=()=>{
+        currentPage=target;
+        renderPrompts();
+        window.scrollTo(0,0);
+      };
+    }
+    els.promptPager.appendChild(btn);
+  };
+  add('上一页', page-1, {disabled:page<=1, label:'上一页'});
+  for(let i=1;i<=pages;i++) add(String(i), i, {current:i===page, label:`第 ${i} 页`});
+  add('下一页', page+1, {disabled:page>=pages, label:'下一页'});
+}
+function getVisiblePrompts(){
+  const q=els.searchInput.value.trim().toLowerCase();
+  let items=state.prompts.filter(p=>{
+    const cat=getCategory(p.categoryId)?.name||'';
+    const text=[p.title,getAllContent(p),cat,...(p.tags||[])].join(' ').toLowerCase();
+    const inCat=currentCategory==='all'
+      ? true
+      : currentCategory==='__uncategorized__'
+        ? (!p.categoryId || !state.categories.some(c=>c.id===p.categoryId))
+        : p.categoryId===currentCategory;
+    const favOk=!favoriteOnly||p.favorite;
+    return inCat && favOk && (!q||text.includes(q));
+  });
+  items.sort((a,b)=>(b[sortMode]||0)-(a[sortMode]||0));
+  return items;
+}
+function renderPrompts(){
+  const key=visibleQueryKey();
+  if(key!==listQueryKey){
+    listQueryKey=key;
+    currentPage=1;
+  }
+  const items=getVisiblePrompts();
+  const view=paginateItems(items, currentPage, PAGE_SIZE);
+  currentPage=view.page;
+  els.promptGrid.innerHTML='';
+  const catName=currentCategory==='all'
+    ? '全部提示词'
+    : currentCategory==='__uncategorized__'
+      ? '未分类提示词'
+      : (getCategory(currentCategory)?.name||'提示词');
+  els.pageTitle.textContent=catName;
+  els.pageSubtitle.textContent=favoriteOnly ? `${items.length} 条收藏` : `${items.length} 条`;
+
+  if(!items.length){
+    els.promptGrid.innerHTML=`<div class="empty"><p class="empty-title">没有匹配的提示词</p><p class="empty-hint">换一个分类或关键词，也可以关掉上方的筛选。</p></div>`;
+    renderPager(0, 1, 1);
+    return;
+  }
+
+  view.items.forEach(p=>{
+    const card=document.createElement('article');
+    card.className='prompt-card';
+    card.tabIndex=0;
+    const preview=escapeHtml(getPrimaryContent(p)).replace(/\s+/g,' ').trim();
+    const scenes=p.variants.length>1?`<span class="tag">${p.variants.length} 个场景</span>`:'';
+    const tags=(p.tags||[]).map(tag=>`<span class="tag">${escapeHtml(tag)}</span>`).join('');
+    card.innerHTML=`
+      <div class="card-head">
+        <h3 class="card-title" title="${escapeHtml(p.title)}">${escapeHtml(p.title)}</h3>
+        <button class="card-copy" type="button" title="复制默认提示词" aria-label="复制默认提示词">${COPY_ICON}</button>
+      </div>
+      <p class="preview">${preview}</p>
+      <div class="meta">
+        ${tags||`<span class="tag">${escapeHtml(getCategory(p.categoryId)?.name||'未分类')}</span>`}
+        ${scenes}
+        <button class="fav ${p.favorite?'on':''}" type="button" title="${p.favorite?'取消收藏':'收藏'}" aria-label="${p.favorite?'取消收藏':'收藏'}" aria-pressed="${p.favorite?'true':'false'}">${STAR_ICON}</button>
+      </div>`;
+    const open=()=>openPrompt(p.id);
+    card.onclick=(e)=>{
+      if(e.target.closest('.card-copy')||e.target.closest('.fav')) return;
+      open();
+    };
+    card.onkeydown=(e)=>{
+      if(e.target.closest('.card-copy')||e.target.closest('.fav')) return;
+      if(e.key==='Enter'||e.key===' '){
+        e.preventDefault();
+        open();
+      }
+    };
+    card.querySelector('.card-copy').onclick=async(e)=>{
+      e.stopPropagation();
+      const previous=p.useCount||0;
+      p.useCount=previous+1;
+      let counted=true;
+      try{
+        await saveData();
+      }catch(err){
+        p.useCount=previous;
+        counted=false;
+      }
+      await copyText(getPrimaryContent(p));
+      showToast(counted?'已复制':'已复制，次数未保存');
+    };
+    card.querySelector('.fav').onclick=async(e)=>{
+      e.stopPropagation();
+      const previousFavorite=p.favorite;
+      const previousUpdated=p.updatedAt;
+      p.favorite=!p.favorite;
+      p.updatedAt=Date.now();
+      try{
+        await saveData();
+      }catch(err){
+        p.favorite=previousFavorite;
+        p.updatedAt=previousUpdated;
+      }
+      renderPrompts();
+      renderCategories();
+    };
+    els.promptGrid.appendChild(card);
+  });
+  renderPager(items.length, view.page, view.pages);
+}
+function renderAll(){
+  renderCategories();
+  renderCategoryOptions();
+  renderPrompts();
+}
+
+function getActiveVariant(){
+  return temporaryPrompt?.variants?.find(v=>v.id===activeVariantId) || null;
+}
+function commitEditor(){
+  const v=getActiveVariant();
+  if(v) v.content=els.promptEditor.value;
+}
+function renderVariantTabs(){
+  els.variantTabs.innerHTML='';
+  if(!temporaryPrompt) return;
+
+  temporaryPrompt.variants.forEach(v=>{
+    const chip=document.createElement('button');
+    chip.type='button';
+    chip.className='variant-chip'+(v.id===activeVariantId?' active':'');
+    chip.title='点击切换，双击重命名';
+    chip.setAttribute('role','tab');
+    chip.setAttribute('aria-selected', v.id===activeVariantId ? 'true' : 'false');
+    chip.innerHTML=`<span>${escapeHtml(v.name)}</span><span class="variant-chip-x" title="删除这个场景">×</span>`;
+
+    chip.onclick=(e)=>{
+      if(e.target.closest('.variant-chip-x')) return;
+      switchVariant(v.id);
+    };
+    chip.ondblclick=async(e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      const name=await askText('修改标签名称',v.name);
+      if(!name?.trim()) return;
+      v.name=name.trim();
+      renderVariantTabs();
+      updateDirtyState();
+    };
+    chip.querySelector('.variant-chip-x').onclick=async(e)=>{
+      e.stopPropagation();
+      e.preventDefault();
+      if(!temporaryPrompt||temporaryPrompt.variants.length<=1){
+        showToast('至少保留一个提示词');
+        return;
+      }
+      const ok=await askConfirm('删除标签',`确定删除「${v.name}」吗？`,'删除',true);
+      if(!ok) return;
+      removeVariant(v.id);
+    };
+    els.variantTabs.appendChild(chip);
+  });
+}
+function switchVariant(id){
+  if(id===activeVariantId) return;
+  commitEditor();
+  activeVariantId=id;
+  const v=getActiveVariant();
+  els.promptEditor.value=v?.content||'';
+  renderVariantTabs();
+  updateDirtyState();
+}
+function addVariant(){
+  commitEditor();
+  const index=temporaryPrompt.variants.length+1;
+  const v={id:makeId(),name:`提示词 ${index}`,content:''};
+  temporaryPrompt.variants.push(v);
+  activeVariantId=v.id;
+  els.promptEditor.value='';
+  renderVariantTabs();
+  updateDirtyState();
+  requestAnimationFrame(()=>{
+    const active=els.variantTabs.querySelector('.variant-chip.active');
+    active?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'nearest'});
+    els.promptEditor.focus();
+  });
+  showToast(`已添加 ${v.name}`);
+}
+function removeVariant(id){
+  if(!temporaryPrompt || temporaryPrompt.variants.length<=1){
+    showToast('至少保留一个提示词');
+    return;
+  }
+  commitEditor();
+
+  const idx=temporaryPrompt.variants.findIndex(v=>v.id===id);
+  if(idx<0) return;
+  temporaryPrompt.variants.splice(idx,1);
+
+  if(activeVariantId===id){
+    const next=temporaryPrompt.variants[Math.min(idx,temporaryPrompt.variants.length-1)];
+    activeVariantId=next.id;
+    els.promptEditor.value=next.content;
+  }
+  renderVariantTabs();
+  updateDirtyState();
+}
+
+let lastActiveElement = null;
+
+function openPrompt(id){
+  const original=state.prompts.find(p=>p.id===id);
+  if(!original) return;
+  lastActiveElement=document.activeElement;
+  currentPromptId=id;
+  temporaryPrompt=structuredClone(normalizePrompt(original));
+  activeVariantId=temporaryPrompt.variants[0].id;
+  editMode=false;
+  newPromptBaseline=null;
+  syncModal();
+  els.detailOverlay.classList.add('open');
+  setTimeout(()=>els.promptEditor.focus(),40);
+}
+function openNewPrompt(){
+  lastActiveElement=document.activeElement;
+  currentPromptId='__new__';
+  temporaryPrompt={
+    id:makeId(),
+    title:'新建提示词',
+    categoryId:state.categories.find(c=>c.id!=='all'&&c.id!=='__uncategorized__')?.id||'',
+    variants:[{id:makeId(),name:'默认',content:''}],
+    favorite:false,
+    createdAt:Date.now(),
+    updatedAt:Date.now(),
+    useCount:0
+  };
+  activeVariantId=temporaryPrompt.variants[0].id;
+  editMode=true;
+  newPromptBaseline={
+    title:'新建提示词',
+    categoryId:temporaryPrompt.categoryId,
+    variantId:temporaryPrompt.variants[0].id
+  };
+  syncModal();
+  els.detailOverlay.classList.add('open');
+  setTimeout(()=>{els.titleInput.focus();els.titleInput.select();},40);
+}
+function setEditChrome(){
+  document.querySelector('#detailOverlay .modal').classList.toggle('is-editing', editMode);
+  els.editModeBtn.classList.toggle('active', editMode);
+  els.editModeBtn.textContent=editMode?'编辑中':'编辑';
+  els.editModeBtn.title=editMode?'再点一次取消编辑':'修改原始提示词，保存后生效';
+}
+function syncModal(){
+  if(temporaryPrompt && !state.categories.some(c=>c.id===temporaryPrompt.categoryId)){
+    temporaryPrompt.categoryId='';
+  }
+  renderCategoryOptions();
+  els.titleInput.value=temporaryPrompt.title;
+  els.categorySelect.value=temporaryPrompt.categoryId||'';
+  els.titleInput.readOnly=!editMode;
+  els.categorySelect.disabled=!editMode;
+  els.promptEditor.readOnly=false;
+  els.promptEditor.setAttribute('aria-label',editMode?'编辑原始提示词':'临时编辑提示词');
+  els.promptEditor.title=editMode?'点击保存后更新提示词库':'临时修改仅用于本次复制，不会更新提示词库';
+  els.deleteBtn.hidden=currentPromptId==='__new__';
+  setEditChrome();
+
+  const active=getActiveVariant()||temporaryPrompt.variants[0];
+  activeVariantId=active.id;
+  els.promptEditor.value=active.content;
+
+  renderVariantTabs();
+  updateDirtyState();
+}
+function enterEditMode(){
+  if(editMode) return;
+  commitEditor();
+  editMode=true;
+  els.titleInput.readOnly=false;
+  els.categorySelect.disabled=false;
+  els.promptEditor.readOnly=false;
+  els.promptEditor.setAttribute('aria-label','编辑原始提示词');
+  els.promptEditor.title='点击保存后更新提示词库';
+  setEditChrome();
+  updateDirtyState();
+}
+function exitEditMode(){
+  editMode=false;
+  els.promptEditor.readOnly=false;
+  if(currentPromptId==='__new__'){
+    const base=newPromptBaseline||{
+      title:'新建提示词',
+      categoryId:temporaryPrompt.categoryId,
+      variantId:temporaryPrompt.variants[0]?.id
+    };
+    temporaryPrompt={
+      ...temporaryPrompt,
+      title:base.title,
+      categoryId:base.categoryId,
+      variants:[{id:base.variantId||makeId(),name:'默认',content:''}]
+    };
+    activeVariantId=temporaryPrompt.variants[0].id;
+  }else{
+    const original=state.prompts.find(p=>p.id===currentPromptId);
+    if(!original) return;
+    temporaryPrompt=structuredClone(normalizePrompt(original));
+    activeVariantId=temporaryPrompt.variants[0].id;
+  }
+  syncModal();
+  showToast('已取消编辑');
+}
+function toggleEditMode(){
+  if(editMode) exitEditMode();
+  else enterEditMode();
+}
+function comparablePrompt(p){
+  const q=normalizePrompt(structuredClone(p));
+  return {
+    title:(q.title||'').trim(),
+    categoryId:q.categoryId,
+    variants:q.variants.map(v=>({
+      id:v.id,
+      name:v.name.trim(),
+      content:v.content
+    }))
+  };
+}
+function currentComparable(){
+  commitEditor();
+  temporaryPrompt.title=els.titleInput.value.trim()||'未命名提示词';
+  temporaryPrompt.categoryId=els.categorySelect.value;
+  return comparablePrompt(temporaryPrompt);
+}
+function originalComparable(){
+  if(currentPromptId==='__new__'){
+    return {
+      title:'新建提示词',
+      categoryId:newPromptBaseline?.categoryId || '',
+      variants:[{id:newPromptBaseline?.variantId||temporaryPrompt.variants[0].id,name:'默认',content:''}]
+    };
+  }
+  const original=state.prompts.find(p=>p.id===currentPromptId);
+  return original?comparablePrompt(original):null;
+}
+function hasPersistentChanges(){
+  const a=currentComparable();
+  const b=originalComparable();
+  return !b||JSON.stringify(a)!==JSON.stringify(b);
+}
+function updateDirtyState(){
+  if(!temporaryPrompt) return;
+  els.saveBtn.hidden=!(editMode&&hasPersistentChanges());
+}
+let promptSaving=false;
+async function savePrompt(){
+  if(!editMode||promptSaving) return;
+  promptSaving=true;
+  try{
+    currentComparable();
+    temporaryPrompt.updatedAt=Date.now();
+    const wasNew=currentPromptId==='__new__';
+    const promptCopy=structuredClone(temporaryPrompt);
+    const savedId=promptCopy.id;
+    let previousPrompt=null;
+    if(wasNew){
+      state.prompts.push(structuredClone(promptCopy));
+      currentPromptId=savedId;
+    }else{
+      const idx=state.prompts.findIndex(p=>p.id===savedId);
+      if(idx>=0){
+        previousPrompt=state.prompts[idx];
+        state.prompts[idx]=structuredClone(promptCopy);
+      }
+    }
+    try{
+      await saveData();
+    }catch(e){
+      if(wasNew){
+        state.prompts=state.prompts.filter(p=>p.id!==savedId);
+        if(currentPromptId===savedId) currentPromptId='__new__';
+      }else if(previousPrompt){
+        const idx=state.prompts.findIndex(p=>p.id===savedId);
+        if(idx>=0) state.prompts[idx]=previousPrompt;
+      }
+      renderAll();
+      return;
+    }
+    renderAll();
+    // 保存期间可能继续输入、切换场景或关闭详情；只更新仍属于本次保存的编辑器。
+    if(currentPromptId!==savedId||!temporaryPrompt) return;
+    const changed=JSON.stringify(currentComparable())!==JSON.stringify(comparablePrompt(promptCopy));
+    if(changed){
+      editMode=true;
+      updateDirtyState();
+      showToast('已保存，后续修改尚未保存');
+      return;
+    }
+    temporaryPrompt=structuredClone(state.prompts.find(p=>p.id===savedId));
+    activeVariantId=temporaryPrompt.variants.find(v=>v.id===activeVariantId)?.id || temporaryPrompt.variants[0].id;
+    editMode=false;
+    syncModal();
+    showToast('已保存');
+  }finally{
+    promptSaving=false;
+  }
+}
+function restorePrompt(){
+  if(currentPromptId==='__new__'){
+    const base=newPromptBaseline||{title:'新建提示词',categoryId:'',variantId:temporaryPrompt.variants[0]?.id};
+    temporaryPrompt={
+      ...temporaryPrompt,
+      title:base.title,
+      categoryId:base.categoryId,
+      variants:[{id:base.variantId||makeId(),name:'默认',content:''}]
+    };
+    activeVariantId=temporaryPrompt.variants[0].id;
+    syncModal();
+    showToast('已恢复');
+    return;
+  }
+  const original=state.prompts.find(p=>p.id===currentPromptId);
+  if(!original) return;
+  temporaryPrompt=structuredClone(normalizePrompt(original));
+  activeVariantId=temporaryPrompt.variants[0].id;
+  syncModal();
+  showToast('已恢复');
+}
+function closeModal(){
+  els.detailOverlay.classList.remove('open');
+  currentPromptId=null;
+  temporaryPrompt=null;
+  activeVariantId=null;
+  editMode=false;
+  if(lastActiveElement && typeof lastActiveElement.focus === 'function'){
+    lastActiveElement.focus();
+  }
+  lastActiveElement=null;
+}
+async function safeCloseModal(){
+  if(editMode && hasPersistentChanges()){
+    const ok=await askConfirm('放弃修改','当前有未保存的修改，确定退出吗？','放弃修改',true);
+    if(!ok) return;
+  }
+  closeModal();
+}
+async function copyCurrent(){
+  commitEditor();
+  const v=getActiveVariant();
+  let counted=true;
+  if(currentPromptId && currentPromptId !== '__new__'){
+    const p=state.prompts.find(x=>x.id===currentPromptId);
+    if(p){
+      const previous=p.useCount||0;
+      p.useCount=previous+1;
+      try{
+        await saveData();
+        if(temporaryPrompt) temporaryPrompt.useCount=p.useCount;
+      }catch(err){
+        p.useCount=previous;
+        counted=false;
+      }
+    }
+  }
+  await copyText(v?.content||'');
+  showToast(counted?'已复制当前提示词':'已复制，次数未保存');
+}
+
+document.getElementById('newPromptBtn').onclick=openNewPrompt;
+document.getElementById('closeModalBtn').onclick=safeCloseModal;
+els.detailOverlay.addEventListener('mousedown',e=>{
+  if(e.target===els.detailOverlay) safeCloseModal();
+});
+els.editModeBtn.onclick=toggleEditMode;
+els.restoreBtn.onclick=restorePrompt;
+els.saveBtn.onclick=savePrompt;
+els.copyBtn.onclick=copyCurrent;
+els.addVariantBtn.onclick=addVariant;
+
+els.titleInput.addEventListener('input',()=>{
+  if(editMode) updateDirtyState();
+});
+els.categorySelect.addEventListener('change',()=>{
+  if(editMode) updateDirtyState();
+});
+els.promptEditor.addEventListener('input',()=>{
+  if(editMode) updateDirtyState();
+});
+
+els.deleteBtn.onclick=async()=>{
+  if(!currentPromptId||currentPromptId==='__new__') return;
+  const p=state.prompts.find(x=>x.id===currentPromptId);
+  const ok=await askConfirm('删除提示词',`确定删除「${p?.title||'该提示词'}」吗？\n删除后无法恢复。`,'删除',true);
+  if(!ok) return;
+  const previousPrompts=state.prompts;
+  state.prompts=state.prompts.filter(x=>x.id!==currentPromptId);
+  try{
+    await saveData();
+  }catch(e){
+    state.prompts=previousPrompts;
+    renderAll();
+    return;
+  }
+  closeModal();
+  renderAll();
+  showToast('已删除');
+};
+
+els.searchInput.addEventListener('input',debounce(renderPrompts,150));
+
+document.querySelectorAll('[data-sort]').forEach(btn=>{
+  btn.onclick=()=>{
+    sortMode=btn.dataset.sort;
+    document.querySelectorAll('[data-sort]').forEach(b=>{
+      const on=b===btn;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', on?'true':'false');
+    });
+    renderPrompts();
+  };
+});
+document.querySelector('[data-filter="favorite"]').onclick=(e)=>{
+  favoriteOnly=!favoriteOnly;
+  e.currentTarget.classList.toggle('is-active', favoriteOnly);
+  e.currentTarget.setAttribute('aria-pressed', favoriteOnly?'true':'false');
+  renderPrompts();
+};
+
+function finishCategoryEdit(){
+  isEditingCategories=false;
+  categorySnapshot=null;
+  categoryViewSnapshot='all';
+  detachedPromptCategories=new Map();
+  categoryEditDirty=false;
+  els.editCategoryBtn.classList.remove('is-active');
+  els.editCategoryBtn.title='编辑分类';
+}
+function restoreCategoryEdit(){
+  if(categorySnapshot) state.categories=structuredClone(categorySnapshot);
+  const valid=new Set(state.categories.map(c=>c.id));
+  for(const prompt of state.prompts){
+    if(detachedPromptCategories.has(prompt.id)) prompt.categoryId=detachedPromptCategories.get(prompt.id);
+    if(prompt.categoryId&&!valid.has(prompt.categoryId)) prompt.categoryId='';
+  }
+  if(temporaryPrompt){
+    if(detachedPromptCategories.has(temporaryPrompt.id)) temporaryPrompt.categoryId=detachedPromptCategories.get(temporaryPrompt.id);
+    if(temporaryPrompt.categoryId&&!valid.has(temporaryPrompt.categoryId)) temporaryPrompt.categoryId='';
+  }
+  currentCategory=categoryViewSnapshot;
+  if(currentCategory!=='all'&&currentCategory!=='__uncategorized__'&&!valid.has(currentCategory)) currentCategory='all';
+}
+els.editCategoryBtn.onclick=async()=>{
+  if(!isEditingCategories){
+    isEditingCategories=true;
+    categorySnapshot=structuredClone(state.categories);
+    categoryViewSnapshot=currentCategory;
+    detachedPromptCategories=new Map();
+    categoryEditDirty=false;
+    els.editCategoryBtn.classList.add('is-active');
+    els.editCategoryBtn.title='退出并保存分类编辑';
+    renderCategories();
+    return;
+  }
+  if(categoryEditDirty){
+    const ok=await askConfirm('保存分类','是否保存当前的分类排序与修改？','保存');
+    if(!ok){
+      restoreCategoryEdit();
+      showToast('已取消编辑');
+    }else{
+      try{
+        await saveData({commitCategoryEdit:true});
+      }catch(e){
+        return;
+      }
+      showToast('已保存分类修改');
+    }
+  }
+  finishCategoryEdit();
+  renderAll();
+  if(temporaryPrompt) syncModal();
+};
+
+document.getElementById('addCategoryBtn').onclick=async()=>{
+  const name=await askText('新建分类','');
+  if(!name?.trim()) return;
+  const created={id:'cat_'+Date.now(),name:name.trim()};
+  state.categories.push(created);
+  if(isEditingCategories){
+    categoryEditDirty=true;
+    renderAll();
+    showToast('已新建分类');
+    return;
+  }
+  try{
+    await saveData();
+  }catch(e){
+    state.categories=state.categories.filter(c=>c.id!==created.id);
+    renderAll();
+    return;
+  }
+  renderAll();
+  showToast('已新建分类');
+};
+
+document.getElementById('exportBtn').onclick=async()=>{
+  if(!persistEnabled){
+    showToast('读取失败，未导出');
+    return;
+  }
+  const json=JSON.stringify(state,null,2);
+  if(isDesktop()){
+    try{
+      const saved=await invoke('save_backup',{json});
+      if(saved) showToast('已导出');
+    }catch(err){
+      showToast('导出失败');
+    }
+    return;
+  }
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='CueVault-backup.json';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=async(e)=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  try{
+    if(!persistEnabled){
+      showToast('读取失败，未导入');
+      return;
+    }
+    let rawParsed;
+    try{
+      rawParsed=JSON.parse(await file.text());
+    }catch(err){
+      await askConfirm('导入失败','所选文件不是合法的 JSON 格式，无法解析。','知道了');
+      return;
+    }
+    const imported=normalizeImport(rawParsed);
+    if(imported.error){
+      await askConfirm('导入失败',imported.error,'知道了');
+      return;
+    }
+    const next={
+      categories:imported.keepCategories?structuredClone(state.categories):imported.categories,
+      prompts:imported.prompts
+    };
+    const problem=validateLibrary(next);
+    if(problem){
+      await askConfirm('导入失败',problem,'知道了');
+      return;
+    }
+    const realCats=next.categories.filter(c=>c.id!=='all').length;
+    const message=imported.keepCategories
+      ? `即将导入 ${next.prompts.length} 条提示词，并保留当前分类。现有提示词会被替换。`
+      : `即将用文件中的 ${next.prompts.length} 条提示词和 ${realCats} 个分类覆盖当前提示词库。`;
+    const ok=await askConfirm('导入数据',message,'继续导入',true);
+    if(!ok) return;
+    const previous=structuredClone(state);
+    const previousCategory=currentCategory;
+    state=next;
+    currentCategory='all';
+    try{
+      await saveData({commitCategoryEdit:true});
+    }catch(err){
+      state=previous;
+      currentCategory=previousCategory;
+      renderAll();
+      return;
+    }
+    finishCategoryEdit();
+    if(temporaryPrompt) closeModal();
+    renderAll();
+    showToast('导入完成');
+  }finally{
+    e.target.value='';
+  }
+};
+
+document.addEventListener('keydown',e=>{
+  const mod=e.ctrlKey||e.metaKey;
+
+  if(mod&&e.key.toLowerCase()==='k'){
+    e.preventDefault();
+    els.searchInput.focus();
+    els.searchInput.select();
+  }
+
+  if(els.appDialogOverlay.classList.contains('open')){
+    if(e.key==='Escape'){
+      e.preventDefault();
+      closeAppDialog(null);
+    }
+    return;
+  }
+
+  if(els.detailOverlay.classList.contains('open')){
+    if(e.key==='Escape'){
+      e.preventDefault();
+      safeCloseModal();
+    }
+    if(mod&&e.key.toLowerCase()==='e'){
+      e.preventDefault();
+      toggleEditMode();
+    }
+    if(mod&&e.key.toLowerCase()==='s'&&editMode&&hasPersistentChanges()){
+      e.preventDefault();
+      savePrompt();
+    }
+    if(mod&&e.key==='Enter'){
+      e.preventDefault();
+      copyCurrent();
+    }
+  }
+});
+
+function applyTheme(theme){
+  const dark=theme==='dark';
+  document.documentElement.dataset.theme=dark?'dark':'light';
+  const btn=document.getElementById('themeToggle');
+  btn.textContent=dark?'深色':'浅色';
+  btn.setAttribute('aria-pressed',dark?'true':'false');
+  btn.title=dark?'切换为浅色':'切换为深色';
+  const value=dark?'dark':'light';
+  if(isDesktop()) invoke('set_setting',{key:'theme',value}).catch(()=>{});
+  else localStorage.setItem(THEME_KEY,value);
+}
+async function readStoredTheme(){
+  if(isDesktop()){
+    const value=await invoke('get_setting',{key:'theme'});
+    return value==='dark'?'dark':'light';
+  }
+  return localStorage.getItem(THEME_KEY)==='dark'?'dark':'light';
+}
+document.getElementById('themeToggle').onclick=()=>{
+  applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+};
+
+const kbd=document.querySelector('.kbd');
+if(kbd && !/Mac|iPhone|iPad/.test(navigator.userAgent)) kbd.textContent='Ctrl K';
+
+async function bindCloseFlush(){
+  if(!isDesktop()) return;
+  const getWin=window.__TAURI__?.window?.getCurrentWindow;
+  if(typeof getWin!=='function') return;
+  const win=getWin();
+  let closing=false;
+  let unlisten=null;
+  unlisten=await win.onCloseRequested(async(event)=>{
+    event.preventDefault();
+    if(closing) return;
+    closing=true;
+    try{
+      if(persistEnabled) await saveData({commitCategoryEdit:isEditingCategories&&categoryEditDirty});
+    }catch(e){
+      closing=false;
+      showToast('保存失败，窗口已保留，请重试保存后关闭',4000);
+      return;
+    }
+    try{
+      await win.destroy();
+      if(typeof unlisten==='function') await unlisten();
+      unlisten=null;
+    }catch(e){
+      closing=false;
+      showToast('关闭失败，请重试',4000);
+    }
+  });
+}
+async function boot(){
+  try{
+    state=await loadData();
+  }catch(err){
+    console.error(err);
+    persistEnabled=false;
+    state=structuredClone(seedData);
+    showToast('读取失败，这次打开不会写入',4000);
+  }
+  let theme='light';
+  try{ theme=await readStoredTheme(); }catch(e){}
+  applyTheme(theme);
+  renderAll();
+  try{ await bindCloseFlush(); }catch(e){}
+}
+boot();
+</script>
+</body>
+</html>

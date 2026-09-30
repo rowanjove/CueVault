@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "主窗口可调用应用内命令",
+  "windows": ["main"],
+  "permissions": ["core:default", "core:window:allow-destroy"]
+}

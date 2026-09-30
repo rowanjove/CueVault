@@ -1,0 +1,29 @@
+# Rust / Tauri build artifacts
+src-tauri/target/
+src-tauri/gen/
+target/
+*.pdb
+
+# Executables & binaries
+*.exe
+portable/CueVault.exe
+
+# Portable runtime, user database and webview cache
+portable/data/
+portable/webview/
+
+# Internal developer notes, rebuild scripts & backups
+backups/
+rebuild-library.py
+整理说明.md
+图标.png
+
+# Logs & temporary files
+*.log
+*.tmp
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
